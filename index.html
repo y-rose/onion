@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>index页面</title>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" href="css/mui.min.css">
+    <script type="text/javascript">
+    	
+   		document.addEventListener('plusready', function(){
+   			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+   			
+   		});
+   		
+    </script>
+</head>
+<body>
+	
+</body>
+</html>
+<script src="js/mui.min.js"></script>
+<script>
+	mui.init({
+		statusBarBackground: '#f7f7f7'
+	});
+	//平台判断,(只有IOS支持的功能要在Android平台隐藏)
+	if(mui.os.android){
+		
+	}
+	
+	mui.plusReady(function () {
+		//仅支持竖屏显示
+		plus.screen.lockOrientation('portrait-primary');
+	    //读取本地存储,检查是否为首次启动
+		var showGuide=plus.storage.getItem('lanchFlag');
+		alert(showGuide);
+		// if(showGuide){
+		if(showGuide){
+			//有值,说明已经显示过了,无需再显示
+			//关闭splash页面
+			plus.navigator.closeSplashscreen();
+			plus.navigator.setFullscreen(false);
+			//预加载
+			preLoad();
+		}else{
+			//显示启动导航栏
+			mui.openWindow({
+				id:'guide',
+				url:'pages/guide.html',
+				styles:{
+					popGesture:'none'
+				},
+				show:{
+					aniShow:'none'
+				},
+				waiting:{
+					autoShow:false
+				}
+			});
+			//延迟的关系,优先打开启动导航页面,避免资源争夺
+			setTimeout(function(){
+				//预加载
+				preLoad();
+			},200);
+		}
+	})
+	
+	//初始化,并预加载
+	function preLoad(){
+		var menu_style={
+			left:"-70%",
+			width:"70%",
+			popGesture:"none",
+			render:"always"
+		}
+		
+		if(mui.os.ios){
+			menu_style.zindex=-1;		
+		}
+		
+		//处理侧滑导航,为了避免和子夜面初始化等竞争资源,延迟加载侧滑页面;
+		
+	}
+</script>
