@@ -26,27 +26,34 @@
 				position: relative;
 			}
 			.item-logo a {
-				width: 200px;
-				height: 200px;
+				width: 150px;
+				height: 170px;
 				display: block;
-				border: 1px solid #FFFFFF;
-				border-color: rgba(255, 255, 255, 0.5);
 				text-align: center;
 				line-height: 200px;
-				border-radius: 50%;
-				font-size: 40px;
+				font-size: 36px;
 				color: #fff;
 				position: absolute;
 				top: 15%;
 				left: 50%;
-				margin-left: -100px;
+				margin-left: -65px;
+				background-repeat: no-repeat;
+			}
+			.guideIcon1{
+				background-image: url(../img/1.png);
+			}
+			.guideIcon2{
+				background-image: url(../img/2.png);
+			}
+			.guideIcon3{
+				background-image: url(../img/3.png);
 			}
 			.animate {
 				position: absolute;
 				left: 0;
-				bottom: 15%;
+				bottom: 20%;
 				width: 100%;
-				color: #fff;
+				color: #FFFFFF;
 				display: -moz-box;
 			}
 			.animate h2 {
@@ -179,10 +186,8 @@
 			<div class="mui-slider-group">
 				<!-- 第一张 -->
 				<div class="mui-slider-item">
-					<div class="item-logo" style="background-color: #D74B28">
-						<a href="#">
-						MUI
-						</a>
+					<div class="item-logo" style="background-color: #7D9EFF">
+						<a href="#" class="guideIcon1"></a>
 						<div class="animate guide-show">
 							<h2 class="animated bounceInDown">紧急救助 一键触达</h2>
 							<li class="animated bounceInLeft">定时求助</li>
@@ -193,9 +198,7 @@
 				<!-- 第二张 -->
 				<div class="mui-slider-item">
 					<div class="item-logo" style="background-color: #02C1ED;">
-						<a href="#">
-						MUI
-						</a>
+						<a href="#" class="guideIcon2"></a>
 						<div id="tips-2" class="animate mui-hidden">
 							<h2 class="animated bounceInDown">实事位置与轨迹</h2>
 							<li class="animated bounceInLeft">发送位置信息给家人</li>
@@ -205,10 +208,8 @@
 				</div>
 				<!-- 第三张 -->
 				<div class="mui-slider-item">
-					<div class="item-logo" style="background-color: #67C962;">
-						<a href="#">
-						MUI
-						</a>
+					<div class="item-logo" style="background-color: #93E8B3;">
+						<a href="#" class="guideIcon3"></a>
 						<div id="tips-3" class="animate mui-hidden">
 							<h2 class="animated bounceInDown">定时提醒</h2>
 						</div>
@@ -216,9 +217,9 @@
 				</div>
 				<!-- 第四张 -->
 				<div class="mui-slider-item">
-					<div class="item-logo" style="background-color: #FCD208;">
+					<div class="item-logo" style="background-color: #C3A5E8;">
 						<a href="#">
-						MUI
+						人人社区
 						</a>
 						<div class="animate">
 							<button id='close' class="mui-btn mui-btn-warning mui-btn-outlined">立即体验</button>
