@@ -186,6 +186,7 @@
 			
 			/*问题反馈在setting页面单独的css==end*/
 			
+			
 		</style>
 		<link rel="stylesheet" type="text/css" href="../css/feedback.css" />
 	</head>
@@ -251,7 +252,7 @@
 						</ul>
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell" style="text-align: center;">
-								<a href="" id="settingBtn"></a>
+								<a href="#login" id="settingBtn">登录</a>
 							</li>
 						</ul>
 					</div>
@@ -303,7 +304,76 @@
 			</div>
 		</div>
 		
+		<div id="login" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">登录</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a>帐号<input id="loginAccount" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入5位及以上帐户名"></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>密码<input id="loginPassword" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入6位及以上密码" type="password"></a>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<!-- <a>自动登录<input  id="loginPhone" class="mui-pull-right rightInput" maxlength="11" placeholder="请输入11位手机号" type="number"></a> -->
+								自动登录
+								<div id="autoLogin" class="mui-switch">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" style="text-align: center;">
+								<a href="#" id="loginBtn">登录</a>
+							</li>
+							<li style="display: block;padding: 10px 0; text-align: center;">
+								<a href="#regist">注册账号</a> 
+								<span class="spliter"> | </span> 
+								<a href='#forgetPassword'>忘记密码</a>
+							</li>
+						</ul>
+					
+					</div>
+				</div>
+			</div>
+		</div>
 		
+		<div id="forgetPassword" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">找回密码</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a>帐号<input id="forgetPasswordAccount" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入您的注册帐号"></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>手机号<input  id="forgetPasswordPhone" class="mui-pull-right rightInput" maxlength="11" placeholder="请输入您的注册手机号" type="number"></a>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" style="text-align: center;">
+								<a href="#" id="forgetPasswordBtn">找回密码</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		
 		
@@ -625,6 +695,7 @@
 	<script src="../js/mui.min.js "></script>
 	<script src="../js/mui.view.js "></script>
 	<script src='../js/feedback.js'></script>
+	<script src="../js/app.js"></script>
 	<script>
 		mui.init();
 		//初始化单页view
@@ -652,12 +723,7 @@
 			defaultImg();
 			setTimeout(function() {
 				initImgPreview();
-			}, 300);
-			
-			//判断是否已经注册/登录
-			juedeUserRegOrLogin();
-			
-			document.getElementById('regBtn').addEventListener('tap',registVerify);
+			}, 300);	
 		});
 		
 // 		setTimeout(function () {
@@ -774,6 +840,65 @@
 				}
 			});
 		});
+		//注册
+		document.getElementById('regBtn').addEventListener('tap',function(){
+			var regInfo = {
+				account: document.getElementById('regAccount').value,
+				password: document.getElementById('regPassword').value,
+				phone: document.getElementById('regPhone').value
+			};
+			var passwordConfirm = document.getElementById('regConfirmPassword').value;
+			if (passwordConfirm != regInfo.password) {
+				plus.nativeUI.toast('密码两次输入不一致');
+				return;
+			}
+			app.reg(regInfo, function(err) {
+// 				if (err) {
+// 					plus.nativeUI.toast(err);
+// 					return;
+// 				}
+				plus.nativeUI.toast('注册成功');
+				mui.back();
+			});
+		});
+		
+		//忘记密码
+		document.getElementById('forgetPasswordBtn').addEventListener('tap',function(){
+			var forgetAccount=document.getElementById('forgetPasswordAccount').value;
+			var forgetPhone=document.getElementById('forgetPasswordAccount').value;
+			var users = localStorage.getItem('$OnionUsers');
+			var lostUser=null;
+			
+			if(users){
+				if(forgetAccount&&forgetPhone){
+					users=JSON.parse(users);
+					for(var user in users){
+						if(user.account==forgetAccount){
+							if(user.phone==forgetPhone){
+								lostUser=user;
+								break
+							}else{
+								plus.nativeUI.toast('手机号与帐号不匹配，请确认手机号');
+							}
+						}
+					}
+					//确认了用户丢失的信息user,等待老吴的短信接口。
+					$.back();
+				}else{
+					plus.nativeUI.toast('请输入您的注册帐户和手机号');
+				}
+			}else{
+				plus.nativeUI.toast('未检索到设备上存在注册信息，请确认已注册');
+			}
+		})
+		
+		//登录
+		document.getElementById('loginBtn').addEventListener('tap',function(){
+			//...
+		});
+		
+		
+		
 		var view = viewApi.view;
 		(function($) {
 			//处理view的后退与webview后退
@@ -974,57 +1099,7 @@
 				var _slider = mui(slider).slider();
 			}
 		}
-		//判断注册和登录状况
-		function juedeUserRegOrLogin(){
-			var registedUsers=localStorage.getItem('$OnionUsers');
-			var userNameBtn=document.getElementById('user-name');
-			//已经注册
-			if(registedUsers){
-				
-			}else{
-				userNameBtn.innerText='还未注册，请点击注册按钮注册';
-				settingBtn.innerText='注册';
-				settingBtn.href='#regist';
-			}
-		}
-		
-		//注册提交
-		function registVerify(){
-			var regInfo = {
-				account: document.getElementById('regAccount').value,
-				password: document.getElementById('regPassword').value,
-				phone: document.getElementById('regPhone').value
-			};
-			var passwordConfirm = document.getElementById('regConfirmPassword').value;
-			if (passwordConfirm != regInfo.password) {
-				plus.nativeUI.toast('密码两次输入不一致');
-				return;
-			}
-			app.reg(regInfo, function(err) {
-				if (err) {
-					plus.nativeUI.toast(err);
-					return;
-				}
-				plus.nativeUI.toast('注册成功');
-				/*
-				 * 注意：
-				 * 1、因本示例应用启动页就是登录页面，因此注册成功后，直接显示登录页即可；
-				 * 2、如果真实案例中，启动页不是登录页，则需修改，使用mui.openWindow打开真实的登录页面
-				 */
-				plus.webview.getLaunchWebview().show("pop-in",200,function () {
-					plus.webview.currentWebview().close("none");
-				});
-				//若启动页不是登录页，则需通过如下方式打开登录页
-/* 				$.openWindow({
-					url: 'login.html',
-					id: 'login',
-					show: {
-						aniShow: 'pop-in'
-					}
-				});
- */			});
-		}
-		
+
 		if(mui.os.stream){
 			document.getElementById("check_update").display = "none";
 		}

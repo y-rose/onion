@@ -51,12 +51,12 @@
 		if (regInfo.password.length < 6) {
 			return callback('密码最短需要 6 个字符');
 		}
-		if (!checkEmail(regInfo.email)) {
-			return callback('邮箱地址不合法');
+		if (!regInPhonefo(regInfo.phone)) {
+			return callback('手机号不合法');
 		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+		var users = JSON.parse(localStorage.getItem('$OnionUsers') || '[]');
 		users.push(regInfo);
-		localStorage.setItem('$users', JSON.stringify(users));
+		localStorage.setItem('$OnionUsers', JSON.stringify(users));
 		return callback();
 	};
 
@@ -83,6 +83,12 @@
 		email = email || '';
 		return (email.length > 3 && email.indexOf('@') > -1);
 	};
+	
+	//手机号验证
+	var regInPhonefo = function(phone){
+		var regchek=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/g;
+		return phone.match(regchek);
+	}
 
 	/**
 	 * 找回密码
