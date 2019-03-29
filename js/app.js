@@ -51,12 +51,12 @@
 		if (regInfo.password.length < 6) {
 			return callback('密码最短需要 6 个字符');
 		}
-		if (!regInPhonefo(regInfo.phone)) {
+		if (!checkPhone(regInfo.phone)) {
 			return callback('手机号不合法');
 		}
-		var users = JSON.parse(localStorage.getItem('$OnionUsers') || '[]');
+		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
 		users.push(regInfo);
-		localStorage.setItem('$OnionUsers', JSON.stringify(users));
+		localStorage.setItem('$Users', JSON.stringify(users));
 		return callback();
 	};
 
@@ -85,7 +85,7 @@
 	};
 	
 	//手机号验证
-	var regInPhonefo = function(phone){
+	var checkPhone = function(phone){
 		var regchek=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/g;
 		return phone.match(regchek);
 	}
@@ -151,4 +151,47 @@
 			}
 		}
 	}
+	
+	/* 获取当前登录用户的所有可用信息 */
+	owner.getCurrentUser=function(account){
+		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+		var authed = users.some(function(user) {
+			if(account == user.account){
+				return user
+			}
+		});
+		return null;
+	}
+	
+	/* 急救档案或紧急联系人保存 */
+	owner.userInfoAdd = function(addInfo, callback) {
+		callback = callback || $.noop;
+		addInfo = addInfo || {};
+		var userAddKey=null;
+		if('aidFile' in addInfo){	//急救档案的保存
+			if(!addInfo.aidFile.name||!addInfo.aidFile.address||!addInfo.aidFile.case){
+				return callback('请填写以上信息');
+			}
+			userAddKey='aidFile'
+		}else if('contact' in addInfo){
+			//紧急联系人
+			if(!addInfo.contact.contactName||!addInfo.contact.contactPhone){
+				return callback('请填写以上信息');
+			}else if(!checkPhone(addInfo.contact.contactPhone)){
+				return callback('请确认联系电话输入正确');
+			}
+			userAddKey='contact';
+		}
+		
+		var state=owner.getState();
+		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
+		users.some(function(user){
+			if(account == user.account){
+				user[userAddKey]=addInfo;
+			}
+		})
+		localStorage.setItem('$Users', JSON.stringify(users));
+		return callback();
+	};
+
 }(mui, window.app = {}));

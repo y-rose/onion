@@ -153,7 +153,7 @@
 			.rightInput{
 				border: none;
 				text-align: right;
-				width: 80%;
+				width: 75%;
 			}
 			.update {
 				font-style: normal;
@@ -222,32 +222,26 @@
 									<img class="mui-media-object mui-pull-left head-img" id="head-img" src="">
 									<div class="mui-media-body">
 										人人社区
-										<p class='mui-ellipsis'>账号:
+										<p class='mui-ellipsis'>
 											<span id="user-name"></span>
 										</p>
 									</div>
 								</a>
 							</li>
 						</ul>
-						<ul class="mui-table-view mui-table-view-chevron">
+						<ul class="mui-table-view mui-table-view-chevron isLoggedIn">
 							<li class="mui-table-view-cell">
-								<a href="#account" class="mui-navigate-right">账号与安全</a>
+								<a href="#account" class="mui-navigate-right">急救档案</a>
+							</li>
+						</ul>
+						<ul class="mui-table-view mui-table-view-chevron isLoggedIn">
+							<li class="mui-table-view-cell">
+								<a href="#contact" class="mui-navigate-right">紧急联系人</a>
 							</li>
 						</ul>
 						<ul class="mui-table-view mui-table-view-chevron">
 							<li class="mui-table-view-cell">
-								<a href="#notifications" class="mui-navigate-right">新消息通知</a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a href="#privacy" class="mui-navigate-right">隐私</a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a href="#general" class="mui-navigate-right">通用</a>
-							</li>
-						</ul>
-						<ul class="mui-table-view mui-table-view-chevron">
-							<li class="mui-table-view-cell">
-								<a href="#about" class="mui-navigate-right">关于MUI <i class="mui-pull-right update">V3.1.0</i></a>
+								<a href="#about" class="mui-navigate-right">关于人人社区 <i class="mui-pull-right update">V3.1.0</i></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
@@ -261,6 +255,7 @@
 			<!--页面主内容区结束-->
 		</div>
 		<!--单页面结束-->
+		<!-- 注册页面 -->
 		<div id="regist" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
@@ -280,7 +275,7 @@
 							</a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>帐号<input id="regAccount" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入5位及以上帐户名"></a>
+								<a>帐号<input id="regAccount" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入5位及以上帐号"></a>
 							</li>
 							<li class="mui-table-view-cell">
 								<a>密码<input id="regPassword" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入6位及以上密码" type="password"></a>
@@ -304,6 +299,7 @@
 			</div>
 		</div>
 		
+		<!-- 登录页面 -->
 		<div id="login" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
@@ -332,21 +328,24 @@
 							</li>
 						</ul>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" style="text-align: center;">
+							<li class="mui-table-view-cell  mui-btn-primary" style="text-align: center;border-radius: 3px;">
 								<a href="#" id="loginBtn">登录</a>
 							</li>
+							
+						</ul>
+						<ul class="mui-table-view">
 							<li style="display: block;padding: 10px 0; text-align: center;">
 								<a href="#regist">注册账号</a> 
 								<span class="spliter"> | </span> 
 								<a href='#forgetPassword'>忘记密码</a>
 							</li>
 						</ul>
-					
 					</div>
 				</div>
 			</div>
 		</div>
 		
+		<!-- 忘记密码页面 -->
 		<div id="forgetPassword" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
@@ -375,319 +374,95 @@
 			</div>
 		</div>
 		
-		
-		
+		<!-- 急救档案页面 -->
 		<div id="account" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
 					<span class="mui-icon mui-icon-left-nav"></span>个人中心
 				</button>
-				<h1 class="mui-center mui-title">账号与安全</h1>
+				<h1 class="mui-center mui-title">急救档案</h1>
 			</div>
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
-								<a id="head" class="mui-navigate-right">头像
+								<a id="head" class="mui-navigate-right">照片
 								<span class="mui-pull-right head">
 									<img class="head-img mui-action-preview" id="head-img1" src=""/>
 								</span>
 							</a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>姓名<span class="mui-pull-right">Hbuilder</span></a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a>HBuilder账号<span class="mui-pull-right">hbuilder@dcloud.io</span></a>
+								<a>姓名<input id="aidName" class="mui-pull-right rightInput" maxlength="6" placeholder="请输入真实姓名"></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
+							<!-- <li class="mui-table-view-cell">
+								<a>家庭住址</a>
+							</li> -->
 							<li class="mui-table-view-cell">
-								<a>QQ号<span class="mui-pull-right">88888888</span></a>
+								<a style="font-size: 14px;">家庭住址</a>
+								<textarea id="aidAddress" rows="3" placeholder="请输入您的家庭住址"></textarea>
+								<a style="font-size: 14px;">既往病例</a>
+								<textarea id="aidCase" rows="3" placeholder="请输入您的病例"></textarea>
 							</li>
-							<li class="mui-table-view-cell">
-								<a>手机号<span class="mui-pull-right">18601234567</span></a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a>邮箱地址<span class="mui-pull-right">hbuilder@dcloud.io</span></a>
+						</ul>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell mui-btn-primary" style="text-align: center;border-radius: 3px;">
+								<a href="#" id="aidFileBtn">保存</a>
 							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div id="notifications" class="mui-page">
+		
+		<!-- 紧急联系人 -->
+		<div id="contact" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
 					<span class="mui-icon mui-icon-left-nav"></span>个人中心
 				</button>
-				<h1 class="mui-center mui-title">新消息通知</h1>
+				<h1 class="mui-center mui-title">紧急联系人</h1>
 			</div>
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
-								<a>接收新消息通知<span class="mui-pull-right">已开启</span></a>
+								<a>联系人<input id="contactName" class="mui-pull-right rightInput" maxlength="6" placeholder="请输入紧急联系人姓名"></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
-								通知显示消息详情
-								<div class="mui-switch mui-active mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-						</ul>
-						<div class="mui-content-padded">
-							<p>若关闭，当收到新消息时，通知提示将不显示发信人和内容摘要</p>
-						</div>
-
-						<ul class="mui-table-view mui-table-view-chevron">
-							<li class="mui-table-view-cell">
-								<a href="#notifications_disturb" class="mui-navigate-right">功能消息免打扰</a>
-							</li>
-						</ul>
-						<div class="mui-content-padded">
-							<p>设置系统功能消息提示声音和震动的时段</p>
-						</div>
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								<a>接收新消息通知<span class="mui-pull-right">已开启</span></a>
+								<a>联系电话<input id="contactPhone" class="mui-pull-right rightInput" maxlength="11" placeholder="请输入紧急联系人电话"></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								声音
-								<div class="mui-switch mui-active mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-							<li class="mui-table-view-cell">
-								震动
-								<div class="mui-switch mui-active mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-						</ul>
-						<div class="mui-content-padded">
-							<p>当HelloMUI在运行时，你可以设置是否需要声音或者震动</p>
-						</div>
-						<div></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="notifications_disturb" class="mui-page">
-			<div class="mui-navbar-inner mui-bar mui-bar-nav">
-				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
-					<span class="mui-icon mui-icon-left-nav"></span>新消息通知
-				</button>
-				<h1 class="mui-center mui-title">功能消息免打扰</h1>
-			</div>
-			<div class="mui-page-content">
-				<div class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul class="mui-table-view mui-table-view-radio">
-							<li class="mui-table-view-cell">
-								<a class="mui-navigate-right">开启</a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a class="mui-navigate-right">只在夜间开启</a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a class="mui-navigate-right">关闭</a>
+							<li class="mui-table-view-cell mui-btn-primary" style="text-align: center;border-radius: 3px;">
+								<a href="#" id="contactBtn">保存</a>
 							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div id="privacy" class="mui-page">
-			<div class="mui-navbar-inner mui-bar mui-bar-nav">
-				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
-					<span class="mui-icon mui-icon-left-nav"></span>个人中心
-				</button>
-				<h1 class="mui-center mui-title">隐私</h1>
-			</div>
-			<div class="mui-page-content">
-				<div class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul class="mui-table-view">
-							<li class="mui-table-view-divider">通讯录</li>
-							<li class="mui-table-view-cell">
-								加我为朋友时需要验证
-								<div class="mui-switch mui-active mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-						</ul>
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								向我推荐QQ好友
-								<div class="mui-switch mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-							<li class="mui-table-view-cell">
-								通过QQ号搜索到我
-								<div class="mui-switch mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-						</ul>
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								可通过手机号搜索到我
-								<div class="mui-switch mui-active mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-							<li class="mui-table-view-cell">
-								向我推荐通讯录朋友
-								<div class="mui-switch mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-							<li class="mui-table-view-divider">开启后，为你推荐已经开通HBuilder的手机联系人</li>
-						</ul>
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								通过HBuilder账号搜索到我
-								<div class="mui-switch mui-active mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-							<li class="mui-table-view-divider">关闭后，其他用户将不能通过HBuilder号搜索到你</li>
-						</ul>
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="general" class="mui-page">
-			<div class="mui-navbar-inner mui-bar mui-bar-nav">
-				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
-					<span class="mui-icon mui-icon-left-nav"></span>个人中心
-				</button>
-				<h1 class="mui-center mui-title">通用</h1>
-			</div>
-			<div class="mui-page-content">
-				<div class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								多语言
-							</li>
-						</ul>
-
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								听筒模式
-								<div class="mui-switch mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
-						</ul>
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								功能
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-
+		
+		<!-- 关于人人社区 -->
 		<div id="about" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
 					<span class="mui-icon mui-icon-left-nav"></span>个人中心
 				</button>
-				<h1 class="mui-center mui-title">关于MUI</h1>
+				<h1 class="mui-center mui-title">关于人人社区</h1>
 			</div>
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll">
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell mui-plus-visible mui-stream-hidden">
-								<a id="rate" class="mui-navigate-right">评分鼓励</a>
-							</li>
-							<li class="mui-table-view-cell mui-plus-visible">
-								<a id="welcome" class="mui-navigate-right">欢迎页</a>
-							</li>
-							<li class="mui-table-view-cell mui-plus-visible">
-								<a id="share" class="mui-navigate-right">分享推荐</a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a id="tel" class="mui-navigate-right">客服电话</a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a id="feedback-btn" href="#feedback" class="mui-navigate-right">问题反馈</a>
-							</li>
-							<li id="check_update" class="mui-table-view-cell mui-plus-visible">
-								<a id="update" class="mui-navigate-right">检查更新</a>
-							</li>
-						</ul>
+						
 					</div>
 				</div>
-			</div>
-		</div>
-
-		<div id="feedback" class="mui-page feedback">
-			<div class="mui-navbar-inner mui-bar mui-bar-nav">
-				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
-					<span class="mui-icon mui-icon-left-nav"></span>关于MUI
-				</button>
-				<button id="submit" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">发送</button>
-				<h1 class="mui-center mui-title">问题反馈</h1>
-			</div>
-			<div class="mui-page-content">
-				<div class="mui-content-padded">
-					<div class="mui-inline">问题和意见</div>
-					<a class="mui-pull-right mui-inline" href="#popover">
-						快捷输入
-						<span class="mui-icon mui-icon-arrowdown"></span>
-					</a>
-					<!--快捷输入具体内容，开发者可自己替换常用语-->
-					<div id="popover" class="mui-popover">
-						<div class="mui-popover-arrow"></div>
-						<div class="mui-scroll-wrapper">
-							<div class="mui-scroll">
-								<ul class="mui-table-view">
-									<!--仅流应用环境下显示-->
-									<li class="mui-table-view-cell stream">
-										<a href="#">桌面快捷方式创建失败</a>
-									</li>
-									<li class="mui-table-view-cell"><a href="#">界面显示错乱</a></li>
-									<li class="mui-table-view-cell"><a href="#">启动缓慢，卡出翔了</a></li>
-									<li class="mui-table-view-cell"><a href="#">偶发性崩溃</a></li>
-									<li class="mui-table-view-cell"><a href="#">UI无法直视，丑哭了</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row mui-input-row">
-					<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
-				</div>
-				<p>图片(选填,提供问题截图,总大小10M以下)</p>
-				<div id='image-list' class="row image-list"></div>
-				<p>QQ/邮箱</p>
-				<div class="mui-input-row">
-					<input id='contact' type="text" class="mui-input-clear contact" placeholder="(选填,方便我们联系你 )" />
-				</div>
-				<div class="mui-content-padded">
-					<div class="mui-inline">应用评分</div>
-					<div class="icons mui-inline" style="margin-left: 6px;">
-						<i data-index="1" class="mui-icon mui-icon-star"></i>
-						<i data-index="2" class="mui-icon mui-icon-star"></i>
-						<i data-index="3" class="mui-icon mui-icon-star"></i>
-						<i data-index="4" class="mui-icon mui-icon-star"></i>
-						<i data-index="5" class="mui-icon mui-icon-star"></i>
-					</div>
-				</div><br />
 			</div>
 		</div>
 
@@ -719,6 +494,12 @@
 				console.log("获取分享服务列表失败");
 			});
 			
+			//登录初始
+			plus.screen.lockOrientation("portrail-primary");	//锁定屏幕方向
+			var settings=app.getSettings();
+			settings.logged=null;
+			app.setSettings(settings);
+			IsLoginThen();
 			//
 			defaultImg();
 			setTimeout(function() {
@@ -730,116 +511,6 @@
 // 			
 // 		},500);
 		
-		//分享链接点击事件
-		document.getElementById("share").addEventListener('tap', function() {
-			var ids = [{
-					id: "weixin",
-					ex: "WXSceneSession"
-				}, {
-					id: "weixin",
-					ex: "WXSceneTimeline"
-				}, {
-					id: "sinaweibo"
-				}, {
-					id: "tencentweibo"
-				}, {
-					id: "qq"
-				}],
-				bts = [{
-					title: "发送给微信好友"
-				}, {
-					title: "分享到微信朋友圈"
-				}, {
-					title: "分享到新浪微博"
-				}, {
-					title: "分享到腾讯微博"
-				}, {
-					title: "分享到QQ"
-				}];
-			plus.nativeUI.actionSheet({
-				cancel: "取消",
-				buttons: bts
-			}, function(e) {
-				var i = e.index;
-				if (i > 0) {
-					var s_id = ids[i - 1].id;
-					var share = shares[s_id];
-					if (share) {
-						if (share.authenticated) {
-							shareMessage(share, ids[i - 1].ex);
-						} else {
-							share.authorize(function() {
-								shareMessage(share, ids[i - 1].ex);
-							}, function(e) {
-								console.log("认证授权失败：" + e.code + " - " + e.message);
-							});
-						}
-					} else {
-						mui.toast("无法获取分享服务，请检查manifest.json中分享插件参数配置，并重新打包")
-					}
-				}
-			});
-		});
-
-		function shareMessage(share, ex) {
-			var msg = {
-				extra: {
-					scene: ex
-				}
-			};
-			msg.href = "http://www.dcloud.io/hellomui/";
-			msg.title = "最接近原生APP体验的高性能前端框架";
-			msg.content = "我正在体验HelloMUI，果然很流畅，基本看不出和原生App的差距";
-			if (~share.id.indexOf('weibo')) {
-				msg.content += "；体验地址：http://www.dcloud.io/hellomui/";
-			}
-			msg.thumbs = ["_www/images/logo.png"];
-			share.send(msg, function() {
-				console.log("分享到\"" + share.description + "\"成功！ ");
-			}, function(e) {
-				console.log("分享到\"" + share.description + "\"失败: " + e.code + " - " + e.message);
-			});
-		}
-		//去评分
-		document.getElementById("rate").addEventListener('tap', function() {
-			if (mui.os.ios) {
-				location.href = 'https://itunes.apple.com/cn/app/hello-mui/id907931805?l=en&mt=8';
-			} else if (mui.os.android) {
-				plus.runtime.openURL("market://details?id=io.dcloud.HelloMUI", function(e) {
-					plus.runtime.openURL("market://details?id=io.dcloud.HelloMUI", function(e) {
-						mui.alert("360手机助手和应用宝，你一个都没装，暂时无法评分，感谢支持");
-					}, "com.qihoo.appstore");
-				}, "com.tencent.android.qqdownloader");
-			}
-		});
-		//客服电话
-		document.getElementById("tel").addEventListener('tap', function() {
-			if(mui.os.plus){
-				plus.device.dial("114");
-			}else{
-				location.href = 'tel:114';
-			}
-			
-		});
-		//检查更新
-		document.getElementById("update").addEventListener('tap', function() {
-			var server = "http://www.dcloud.io/check/update"; //获取升级描述文件服务器地址
-			mui.getJSON(server, {
-				"appid": plus.runtime.appid,
-				"version": plus.runtime.version,
-				"imei": plus.device.imei
-			}, function(data) {
-				if (data.status) {
-					plus.ui.confirm(data.note, function(i) {
-						if (0 == i) {
-							plus.runtime.openURL(data.url);
-						}
-					}, data.title, ["立即更新", "取　　消"]);
-				} else {
-					mui.toast('Hello MUI 已是最新版本~')
-				}
-			});
-		});
 		//注册
 		document.getElementById('regBtn').addEventListener('tap',function(){
 			var regInfo = {
@@ -866,7 +537,7 @@
 		document.getElementById('forgetPasswordBtn').addEventListener('tap',function(){
 			var forgetAccount=document.getElementById('forgetPasswordAccount').value;
 			var forgetPhone=document.getElementById('forgetPasswordAccount').value;
-			var users = localStorage.getItem('$OnionUsers');
+			var users = localStorage.getItem('$Users');
 			var lostUser=null;
 			
 			if(users){
@@ -894,9 +565,130 @@
 		
 		//登录
 		document.getElementById('loginBtn').addEventListener('tap',function(){
-			//...
+			var loginInfo = {
+				account: document.getElementById('loginAccount').value,
+				password: document.getElementById('loginPassword').value
+			};
+			app.login(loginInfo, function(err) {
+				if (err) {
+					plus.nativeUI.toast(err);
+					return;
+				}
+				//判断是否自动登录
+				var isActive=document.getElementById('autoLogin').classList.contains('mui-active');
+				settings.autoLogin=isActive;
+				settings.logged=true;
+				app.setSettings(settings);
+				IsLoginThen();
+				$.back();
+			});
 		});
 		
+		//退出登录
+		document.getElementById('settingBtn').addEventListener('tap',function(){
+			var settingBtnText=document.getElementById('settingBtn').innerText;
+			if(settingBtnText=="登录"){
+				retrun
+			}
+			mui.confirm('确定退出登录且不再自动登录吗？','人人社区',['取消退出','确认退出'],function (e) {
+				if(e.index==0){
+					return
+				}else{
+					app.setSettings();	//自动登录和已登录标示
+					app.setState();		//删除登录状态state
+					IsLoginThen()		//初始化个人中心
+				}
+			},'div')
+		})
+		
+		
+		//急救档案的保存
+		document.getElementById('aidFileBtn').addEventListener('tap',function(){
+			var aidFileInfo = {
+				aidFile:{
+					name:document.getElementById('aidName').value,
+					address:document.getElementById('aidAddress').value,
+					case:document.getElementById('aidCase').value
+				}
+			};
+			app.userInfoAdd(aidFileInfo, function(err) {
+				if (err) {
+					plus.nativeUI.toast(err);
+					return;
+				}
+				plus.nativeUI.toast('保存成功');
+				mui.back();
+			});
+		})
+		
+		//紧急联系人的保存
+		document.getElementById('contactBtn').addEventListener('tap',function(){
+			var contactInfo = {
+				contact:{
+					contactName:document.getElementById('contactName').value,
+					contactPhone:document.getElementById('contactPhone').value
+				}
+			};
+			app.userInfoAdd(contactInfo, function(err) {
+				if (err) {
+					plus.nativeUI.toast(err);
+					return;
+				}
+				plus.nativeUI.toast('保存成功');
+				mui.back();
+			});
+		})
+		
+		
+		//判断是否登录,后对个人中心进行更新渲染
+		var IsLoginThen=function(){
+			//先判断是否有自动登录设置
+			var settings=app.getSettings();
+			var userName=document.getElementById('user-name');
+			var showIfLoggedIn=document.getElementsByClassName('isLoggedIn');
+			var settingBtn=document.getElementById('settingBtn');
+			var state=app.getState();
+			var currentUser=null;	//当前登录用户的所有可用信息
+			if(setting.autoLogin||setting.logged){	//有自动登录的用户或已经登录
+				if(state){	
+					//已经登录
+					userName.innerText="帐号："+state.account;
+					settingBtn.innerText="退出登录";
+					settingBtn.href="#";
+					for(var i=0;i<showIfLoggedIn.length;i++){
+						showIfLoggedIn[i].style.display='block';
+					}
+					currentUser=app.getCurrentUser(state);
+					if(currentUser){
+						//初始化急救档案
+						if(currentUser.aidFile){
+							document.getElementById('aidName').value=currentUser.aidFile.name;
+							document.getElementById('aidAddress').value=currentUser.aidFile.address;
+							document.getElementById('aidCase').value=currentUser.aidFile.case;
+						}
+						//初始化紧急联系人
+						if(currentUser.contact){
+							document.getElementById('contactName').value=currentUser.contact.contactName;
+							document.getElementById('contactPhone').value=currentUser.contact.contactPhone;
+						}
+					}	
+					return
+				}
+			}
+			//无登录
+			plus.nativeUI.toast('请先行登录才能使用完整功能');
+			userName.innerText="未登录";
+			settingBtn.innerText="登录";
+			settingBtn.href="#login";
+			for(var i=0;i<showIfLoggedIn.length;i++){
+				showIfLoggedIn[i].style.display='none';
+			}
+			document.getElementById('aidName').value='';
+			document.getElementById('aidAddress').value='';
+			document.getElementById('aidCase').value='';
+			document.getElementById('contactName').value='';
+			document.getElementById('contactPhone').value='';
+		}
 		
 		
 		var view = viewApi.view;
@@ -1044,20 +836,6 @@
 		}
 		document.getElementById("head-img1").addEventListener('tap', function(e) {
 			e.stopPropagation();
-		});
-		document.getElementById("welcome").addEventListener('tap', function(e) {
-			//显示启动导航
-			mui.openWindow({
-				id: 'guide',
-				url: 'guide.html',
-				show: {
-					aniShow: 'fade-in',
-					duration: 300
-				},
-				waiting: {
-					autoShow: false
-				}
-			});
 		});
 
 		function initImgPreview() {
