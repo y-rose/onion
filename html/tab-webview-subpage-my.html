@@ -188,7 +188,6 @@
 			
 			
 		</style>
-		<link rel="stylesheet" type="text/css" href="../css/feedback.css" />
 	</head>
 
 	<body class="mui-fullscreen">
@@ -218,7 +217,7 @@
 					<div class="mui-scroll">
 						<ul class="mui-table-view mui-table-view-chevron">
 							<li class="mui-table-view-cell mui-media">
-								<a class="mui-navigate-right" href="#account">
+								<a>
 									<img class="mui-media-object mui-pull-left head-img" id="head-img" src="">
 									<div class="mui-media-body">
 										人人社区
@@ -460,7 +459,39 @@
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll">
-						
+						<div class="mui-content">
+							<div class="mui-card">
+								<ul class="mui-table-view" style="margin-top: 0; margin-bottom: 0;">
+									<li class="mui-table-view-cell mui-collapse">
+										<a class="mui-navigate-right" href="#">关于定位</a>
+										<div class="mui-collapse-content">
+											<p>
+												为保证定位成功且准确，请尽量开启您手机的定位功能。
+											</p>
+										</div>
+									</li>
+									<li class="mui-table-view-cell mui-collapse">
+										<a class="mui-navigate-right" href="#">关于紧急联系人</a>
+										<div class="mui-collapse-content">
+											<p>
+												当您遇到需要救助的情况，我们可以将您的位置信息发送给您的紧急联系人，以此向您的紧急联系人发起帮助请求。
+											</p>
+											<p>
+												请将紧急联系人设置为您亲密度较高的家人或朋友。
+											</p>
+										</div>
+									</li>
+									<li class="mui-table-view-cell mui-collapse">
+										<a class="mui-navigate-right" href="#">关于权限问题</a>
+										<div class="mui-collapse-content">
+											<p>
+												不同设备有不同的权限访问限制,请您开启人人社区定位、短信等操作。
+											</p>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -469,7 +500,6 @@
 	</body>
 	<script src="../js/mui.min.js "></script>
 	<script src="../js/mui.view.js "></script>
-	<script src='../js/feedback.js'></script>
 	<script src="../js/app.js"></script>
 	<script>
 		mui.init();
@@ -588,7 +618,7 @@
 		document.getElementById('settingBtn').addEventListener('tap',function(){
 			var settingBtnText=document.getElementById('settingBtn').innerText;
 			if(settingBtnText=="登录"){
-				retrun
+				return
 			}
 			mui.confirm('确定退出登录且不再自动登录吗？','人人社区',['取消退出','确认退出'],function (e) {
 				if(e.index==0){
@@ -719,6 +749,8 @@
 		})(mui);
 		//更换头像
 		mui(".mui-table-view-cell").on("tap", "#head", function(e) {
+			var ImgId=this.getAttribute("id");
+			var whichImg=ImgId=="head-img1"?"realImg":"justImg"
 			if(mui.os.plus){
 				var a = [{
 					title: "拍照"
@@ -830,7 +862,7 @@
 			}else{
 				document.getElementById("head-img").src = '../img/portrail_man_1.jpg';
 				document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-					document.getElementById("head-img2").src = '../img/portrail_man_1.jpg';
+				document.getElementById("head-img2").src = '../img/portrail_man_1.jpg';
 			}
 			
 		}
