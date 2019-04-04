@@ -230,12 +230,12 @@
 						</ul>
 						<ul class="mui-table-view mui-table-view-chevron isLoggedIn">
 							<li class="mui-table-view-cell">
-								<a href="#account" class="mui-navigate-right">急救档案</a>
+								<a href="#account" class="mui-navigate-right" id="aidFileShowBtn">急救档案</a>
 							</li>
 						</ul>
 						<ul class="mui-table-view mui-table-view-chevron isLoggedIn">
 							<li class="mui-table-view-cell">
-								<a href="#contact" class="mui-navigate-right">紧急联系人</a>
+								<a href="#contact" class="mui-navigate-right" id="contactShowBtn">紧急联系人</a>
 							</li>
 						</ul>
 						<ul class="mui-table-view mui-table-view-chevron">
@@ -289,7 +289,7 @@
 							</li>
 						</ul>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" style="text-align: center;">
+							<li class="mui-table-view-cell mui-btn-primary" style="text-align: center;">
 								<a href="#" id="regBtn">注册</a>
 							</li>
 						</ul>
@@ -334,9 +334,9 @@
 						</ul>
 						<ul class="mui-table-view">
 							<li style="display: block;padding: 10px 0; text-align: center;">
-								<a href="#regist">注册账号</a> 
+								<a href="#regist" id="registShowBtn">注册账号</a> 
 								<span class="spliter"> | </span> 
-								<a href='#forgetPassword'>忘记密码</a>
+								<a href='#forgetPassword' id="forgetShowBtn">忘记密码</a>
 							</li>
 						</ul>
 					</div>
@@ -364,7 +364,7 @@
 							</li>
 						</ul>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" style="text-align: center;">
+							<li class="mui-table-view-cell mui-btn-primary" style="text-align: center;">
 								<a href="#" id="forgetPasswordBtn">找回密码</a>
 							</li>
 						</ul>
@@ -541,6 +541,15 @@
 // 			
 // 		},500);
 		
+		//注册初始化
+		document.getElementById("registShowBtn").addEventListener('tap',function(){
+			document.getElementById('regAccount').value="";
+			document.getElementById('regPassword').value="";
+			document.getElementById('regPhone').value="";
+			document.getElementById('regConfirmPassword').value="";
+			document.getElementById("head-img2").src = '../img/portrail_man_1.jpg';
+		})
+		
 		//注册
 		document.getElementById('regBtn').addEventListener('tap',function(){
 			var regInfo = {
@@ -554,14 +563,23 @@
 				return;
 			}
 			app.reg(regInfo, function(err) {
-// 				if (err) {
-// 					plus.nativeUI.toast(err);
-// 					return;
-// 				}
+				if (err) {
+					plus.nativeUI.toast(err);
+					return;
+				}
 				plus.nativeUI.toast('注册成功');
 				mui.back();
+				document.getElementById('regAccount').value="";
+				document.getElementById('regPassword').value="";
+				document.getElementById('regPhone').value="";
 			});
 		});
+		
+		//忘记密码初始化
+		document.getElementById('forgetShowBtn').addEventListener('tap',function(){
+			document.getElementById('forgetPasswordAccount').value="";
+			document.getElementById('forgetPasswordAccount').value="";
+		})
 		
 		//忘记密码
 		document.getElementById('forgetPasswordBtn').addEventListener('tap',function(){
@@ -618,6 +636,8 @@
 		document.getElementById('settingBtn').addEventListener('tap',function(){
 			var settingBtnText=document.getElementById('settingBtn').innerText;
 			if(settingBtnText=="登录"){
+				document.getElementById('loginAccount').value="";
+				document.getElementById('loginPassword').value="";
 				return
 			}
 			mui.confirm('确定退出登录且不再自动登录吗？','人人社区',['取消退出','确认退出'],function (e) {
@@ -631,6 +651,30 @@
 			},'div')
 		})
 		
+		//急救档案初始化
+		document.getElementById('aidFileShowBtn').addEventListener("tap",function(){
+			var currentUser=app.getCurrentUser(state);
+			if(currentUser.aidFile){
+				document.getElementById('aidName').value=currentUser.aidFile.name;
+				document.getElementById('aidAddress').value=currentUser.aidFile.address;
+				document.getElementById('aidCase').value=currentUser.aidFile.case;
+				if(mui.os.plus){
+					plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
+						var s = entry.fullPath + "?version=" + new Date().getTime();;
+						document.getElementById("head-img1").src = s;	//急救档案
+					}, function(e) {
+						document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
+					})
+				}else{
+					document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
+				}
+			}else{
+				document.getElementById('aidName').value="";
+				document.getElementById('aidAddress').value="";
+				document.getElementById('aidCase').value="";
+				document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
+			}
+		})
 		
 		//急救档案的保存
 		document.getElementById('aidFileBtn').addEventListener('tap',function(){
@@ -649,6 +693,21 @@
 				plus.nativeUI.toast('保存成功');
 				mui.back();
 			});
+		})
+		
+		//紧急联系人的初始化
+		document.getElementById('contactShowBtn').addEventListener('tap',function(){
+			var currentUser=app.getCurrentUser(state);
+			if(currentUser){
+				//初始化紧急联系人
+				if(currentUser.contact){
+					document.getElementById('contactName').value=currentUser.contact.contactName;
+					document.getElementById('contactPhone').value=currentUser.contact.contactPhone;
+				}else{
+					document.getElementById('contactName').value="";
+					document.getElementById('contactPhone').value="";
+				}
+			}	
 		})
 		
 		//紧急联系人的保存
@@ -678,7 +737,6 @@
 			var showIfLoggedIn=document.getElementsByClassName('isLoggedIn');
 			var settingBtn=document.getElementById('settingBtn');
 			var state=app.getState();
-			var currentUser=null;	//当前登录用户的所有可用信息
 			if(setting.autoLogin||setting.logged){	//有自动登录的用户或已经登录
 				if(state){	
 					//已经登录
@@ -687,20 +745,6 @@
 					settingBtn.href="#";
 					for(var i=0;i<showIfLoggedIn.length;i++){
 						showIfLoggedIn[i].style.display='block';
-					}
-					currentUser=app.getCurrentUser(state);
-					if(currentUser){
-						//初始化急救档案
-						if(currentUser.aidFile){
-							document.getElementById('aidName').value=currentUser.aidFile.name;
-							document.getElementById('aidAddress').value=currentUser.aidFile.address;
-							document.getElementById('aidCase').value=currentUser.aidFile.case;
-						}
-						//初始化紧急联系人
-						if(currentUser.contact){
-							document.getElementById('contactName').value=currentUser.contact.contactName;
-							document.getElementById('contactPhone').value=currentUser.contact.contactPhone;
-						}
 					}	
 					return
 				}
@@ -713,11 +757,6 @@
 			for(var i=0;i<showIfLoggedIn.length;i++){
 				showIfLoggedIn[i].style.display='none';
 			}
-			document.getElementById('aidName').value='';
-			document.getElementById('aidAddress').value='';
-			document.getElementById('aidCase').value='';
-			document.getElementById('contactName').value='';
-			document.getElementById('contactPhone').value='';
 		}
 		
 		
@@ -750,7 +789,7 @@
 		//更换头像
 		mui(".mui-table-view-cell").on("tap", "#head", function(e) {
 			var ImgId=this.getAttribute("id");
-			var whichImg=ImgId=="head-img1"?"realImg":"justImg"
+			var whichImg=ImgId=="head-img1"?"aidlImg":"justImg"
 			if(mui.os.plus){
 				var a = [{
 					title: "拍照"
@@ -766,10 +805,10 @@
 						case 0:
 							break;
 						case 1:
-							getImage();
+							getImage(whichImg);
 							break;
 						case 2:
-							galleryImg();
+							galleryImg(whichImg);
 							break;
 						default:
 							break
@@ -779,7 +818,8 @@
 			
 		});
 
-		function getImage() {
+		function getImage(whichImg) {
+			var imgLocalPlace=whichImg=="aidlImg"?"_doc/aidHeadPic.jpg":"_doc/head.jpg";
 			var c = plus.camera.getCamera();
 			c.captureImage(function(e) {
 				plus.io.resolveLocalFileSystemURL(e, function(entry) {
@@ -796,11 +836,12 @@
 			}, function(s) {
 				console.log("error" + s);
 			}, {
-				filename: "_doc/head.jpg"
+				filename: imgLocalPlace
 			})
 		}
 
-		function galleryImg() {
+		function galleryImg(whichImg) {
+			var imgLocalPlace=whichImg=="aidlImg"?"aidHeadPic.jpg":"head.jpg";
 			plus.gallery.pick(function(a) {
 				plus.io.resolveLocalFileSystemURL(a, function(entry) {
 					plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
@@ -808,10 +849,10 @@
 							//文件已存在
 							file.remove(function() {
 								console.log("file remove success");
-								entry.copyTo(root, 'head.jpg', function(e) {
+								entry.copyTo(root, imgLocalPlace, function(e) {
 										var e = e.fullPath + "?version=" + new Date().getTime();
-										document.getElementById("head-img").src = e;
-										document.getElementById("head-img1").src = e;
+										var whichPicId=whichImg=="aidlImg"?"head-img1":"head-img";
+										document.getElementById(whichPicId).src = e;
 										//变更大图预览的src
 										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
 										document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
@@ -824,10 +865,10 @@
 							});
 						}, function() {
 							//文件不存在
-							entry.copyTo(root, 'head.jpg', function(e) {
+							entry.copyTo(root, imgLocalPlace, function(e) {
 									var path = e.fullPath + "?version=" + new Date().getTime();
-									document.getElementById("head-img").src = path;
-									document.getElementById("head-img1").src = path;
+									var whichPicId=whichImg=="aidlImg"?"head-img1":"head-img";
+									document.getElementById(whichPicId).src = path;
 									//变更大图预览的src
 									//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
 									document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
@@ -850,19 +891,12 @@
 		function defaultImg() {
 			if(mui.os.plus){
 				plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
-					var s = entry.fullPath + "?version=" + new Date().getTime();;
-					document.getElementById("head-img").src = s;
-					document.getElementById("head-img1").src = s;	//帐户与安全
-					document.getElementById("head-img2").src = s;	//注册
+					var s = entry.fullPath + "?version=" + new Date().getTime();
 				}, function(e) {
 					document.getElementById("head-img").src = '../img/portrail_man_1.jpg';
-					document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-					document.getElementById("head-img2").src = '../img/portrail_man_1.jpg';
 				})
 			}else{
 				document.getElementById("head-img").src = '../img/portrail_man_1.jpg';
-				document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-				document.getElementById("head-img2").src = '../img/portrail_man_1.jpg';
 			}
 			
 		}
