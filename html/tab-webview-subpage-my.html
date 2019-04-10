@@ -602,7 +602,7 @@
 						}
 					}
 					//确认了用户丢失的信息user,等待老吴的短信接口。
-					$.back();
+					mui.back();
 				}else{
 					plus.nativeUI.toast('请输入您的注册帐户和手机号');
 				}
@@ -624,11 +624,12 @@
 				}
 				//判断是否自动登录
 				var isActive=document.getElementById('autoLogin').classList.contains('mui-active');
+				var settings=app.getSettings();
 				settings.autoLogin=isActive;
 				settings.logged=true;
 				app.setSettings(settings);
 				IsLoginThen();
-				$.back();
+				mui.back();
 			});
 		});
 		
@@ -653,27 +654,31 @@
 		
 		//急救档案初始化
 		document.getElementById('aidFileShowBtn').addEventListener("tap",function(){
+			var state=app.getState();
 			var currentUser=app.getCurrentUser(state);
-			if(currentUser.aidFile){
-				document.getElementById('aidName').value=currentUser.aidFile.name;
-				document.getElementById('aidAddress').value=currentUser.aidFile.address;
-				document.getElementById('aidCase').value=currentUser.aidFile.case;
-				if(mui.os.plus){
-					plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
-						var s = entry.fullPath + "?version=" + new Date().getTime();;
-						document.getElementById("head-img1").src = s;	//急救档案
-					}, function(e) {
+			if(currentUser){
+				if(currentUser.aidFile){
+					document.getElementById('aidName').value=currentUser.aidFile.name;
+					document.getElementById('aidAddress').value=currentUser.aidFile.address;
+					document.getElementById('aidCase').value=currentUser.aidFile.case;
+					if(mui.os.plus){
+						plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
+							var s = entry.fullPath + "?version=" + new Date().getTime();;
+							document.getElementById("head-img1").src = s;	//急救档案
+						}, function(e) {
+							document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
+						})
+					}else{
 						document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-					})
+					}
 				}else{
+					document.getElementById('aidName').value="";
+					document.getElementById('aidAddress').value="";
+					document.getElementById('aidCase').value="";
 					document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
 				}
-			}else{
-				document.getElementById('aidName').value="";
-				document.getElementById('aidAddress').value="";
-				document.getElementById('aidCase').value="";
-				document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
 			}
+			
 		})
 		
 		//急救档案的保存
@@ -697,6 +702,7 @@
 		
 		//紧急联系人的初始化
 		document.getElementById('contactShowBtn').addEventListener('tap',function(){
+			var state=app.getState();
 			var currentUser=app.getCurrentUser(state);
 			if(currentUser){
 				//初始化紧急联系人
@@ -737,7 +743,7 @@
 			var showIfLoggedIn=document.getElementsByClassName('isLoggedIn');
 			var settingBtn=document.getElementById('settingBtn');
 			var state=app.getState();
-			if(setting.autoLogin||setting.logged){	//有自动登录的用户或已经登录
+			if(settings.autoLogin||settings.logged){	//有自动登录的用户或已经登录
 				if(state){	
 					//已经登录
 					userName.innerText="帐号："+state.account;

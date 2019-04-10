@@ -18,7 +18,7 @@
 		if (loginInfo.password.length < 6) {
 			return callback('密码最短为 6 个字符');
 		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
 		var authed = users.some(function(user) {
 			return loginInfo.account == user.account && loginInfo.password == user.password;
 		});
@@ -153,14 +153,16 @@
 	}
 	
 	/* 获取当前登录用户的所有可用信息 */
-	owner.getCurrentUser=function(account){
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+	owner.getCurrentUser=function(state){
+		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
+		var currenUser=null;
 		var authed = users.some(function(user) {
-			if(account == user.account){
-				return user
+			if(state.account == user.account){
+				currenUser=user;
+				return
 			}
 		});
-		return null;
+		return currenUser;
 	}
 	
 	/* 急救档案或紧急联系人保存 */
@@ -186,8 +188,8 @@
 		var state=owner.getState();
 		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
 		users.some(function(user){
-			if(account == user.account){
-				user[userAddKey]=addInfo;
+			if(state.account == user.account){
+				user[userAddKey]=addInfo[userAddKey];
 			}
 		})
 		localStorage.setItem('$Users', JSON.stringify(users));
