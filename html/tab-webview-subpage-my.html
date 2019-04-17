@@ -240,7 +240,7 @@
 						</ul>
 						<ul class="mui-table-view mui-table-view-chevron">
 							<li class="mui-table-view-cell">
-								<a href="#about" class="mui-navigate-right">关于人人社区 <i class="mui-pull-right update">V3.1.0</i></a>
+								<a href="#about" class="mui-navigate-right">关于人人社区 <i class="mui-pull-right update">V1.1.0</i></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
@@ -267,7 +267,7 @@
 					<div class="mui-scroll">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
-								<a id="head" class="mui-navigate-right">头像
+								<a id="head-reg" class="mui-navigate-right head-pic">头像
 								<span class="mui-pull-right head">
 									<img class="head-img mui-action-preview" id="head-img2" src=""/>
 								</span>
@@ -386,7 +386,7 @@
 					<div class="mui-scroll">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
-								<a id="head" class="mui-navigate-right">照片
+								<a id="head-aid" class="mui-navigate-right head-pic">照片
 								<span class="mui-pull-right head">
 									<img class="head-img mui-action-preview" id="head-img1" src=""/>
 								</span>
@@ -486,6 +486,14 @@
 										<div class="mui-collapse-content">
 											<p>
 												不同设备有不同的权限访问限制,请您开启人人社区定位、短信等操作。
+											</p>
+										</div>
+									</li>
+									<li class="mui-table-view-cell mui-collapse">
+										<a class="mui-navigate-right" href="#">关于头像/照片上传</a>
+										<div class="mui-collapse-content">
+											<p>
+												当您从相机/相册选取要使用的头像图片(注册时用)或您的真实照片(急救档案用)，无需保存，选取即可生效使用。
 											</p>
 										</div>
 									</li>
@@ -793,9 +801,9 @@
 			});
 		})(mui);
 		//更换头像
-		mui(".mui-table-view-cell").on("tap", "#head", function(e) {
+		mui(".mui-table-view-cell").on("tap", ".head-pic", function(e) {
 			var ImgId=this.getAttribute("id");
-			var whichImg=ImgId=="head-img1"?"aidlImg":"justImg"
+			var whichImg=ImgId=="head-aid"?"aidlImg":"justImg"
 			if(mui.os.plus){
 				var a = [{
 					title: "拍照"
@@ -895,9 +903,36 @@
 		};
 
 		function defaultImg() {
+			var state=app.getState();
+			var currentUser=app.getCurrentUser(state);
+			if(currentUser){
+				if(currentUser.aidFile){
+					if(mui.os.plus){
+						plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
+							var s = entry.fullPath + "?version=" + new Date().getTime();;
+							document.getElementById("head-img1").src = s;	//急救档案
+						}, function(e) {
+							document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
+						})
+					}else{
+						document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
+					}
+				}else{
+					document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
+			
 			if(mui.os.plus){
 				plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
 					var s = entry.fullPath + "?version=" + new Date().getTime();
+					document.getElementById("head-img").src = s;
 				}, function(e) {
 					document.getElementById("head-img").src = '../img/portrail_man_1.jpg';
 				})
