@@ -12,29 +12,42 @@
 		loginInfo = loginInfo || {};
 		loginInfo.account = loginInfo.account || '';
 		loginInfo.password = loginInfo.password || '';
-		if (loginInfo.account.length < 5) {
-			return callback('账号最短为 5 个字符');
+		if (loginInfo.account.length < 1) {
+			return callback('请填写用户名');
 		}
-		if (loginInfo.password.length < 6) {
-			return callback('密码最短为 6 个字符');
+		if (loginInfo.password.length < 3) {
+			return callback('密码最短为 3 个字符');
 		}
-		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
-		var authed = users.some(function(user) {
-			return loginInfo.account == user.account && loginInfo.password == user.password;
-		});
-		if (authed) {
-			return owner.createState(loginInfo.account, callback);
-		} else {
-			return callback('用户名或密码错误');
-		}
-	};
+		mui.ajax('http://192.168.40.133:8088/yc/user/login', {
+			data: {
+				username: regInfo.account,
+				password: regInfo.password
+			},
+			dataType: 'text',
+			type: 'post',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data) {
+					data = JSON.parse(data);
+					if (data.status == "success") {
+						//存储当前用户和已登录标示
+						var settings = owner.getSettings();
+						settings.logged = true;
+						settings.currentUser = data.data.uid;
+						app.setSettings(settings);
+						return callback();
+					} else {
+						return callback(data.msg);
+					}
+				} else {
+					return callback('登录失败');
+				}
 
-	owner.createState = function(name, callback) {
-		var state = owner.getState();
-		state.account = name;
-		state.token = "token123456789";
-		owner.setState(state);
-		return callback();
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback('网络出错，请稍候再试');
+			}
+		})
 	};
 
 	/**
@@ -45,62 +58,183 @@
 		regInfo = regInfo || {};
 		regInfo.account = regInfo.account || '';
 		regInfo.password = regInfo.password || '';
-		if (regInfo.account.length < 5) {
-			return callback('用户名最短需要 5 个字符');
+		regInfo.phone = regInfo.phone || '';
+		if (regInfo.account.length < 1) {
+			return callback('请填写用户名');
 		}
-		if (regInfo.password.length < 6) {
-			return callback('密码最短需要 6 个字符');
+		if (regInfo.password.length < 3) {
+			return callback('密码最短需要 3 个字符');
 		}
 		if (!checkPhone(regInfo.phone)) {
 			return callback('手机号不合法');
 		}
-		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
-		users.push(regInfo);
-		localStorage.setItem('$Users', JSON.stringify(users));
-		return callback();
+		mui.ajax('http://192.168.40.133:8088/yc/user/register', {
+			data: {
+				username: regInfo.account,
+				password: regInfo.password,
+				phone: regInfo.phone
+			},
+			dataType: 'text',
+			type: 'post',
+			timeout: 10000, //超时时间设置为10秒；              
+			success: function(data) {
+				if (data) {
+					data = JSON.parse(data);
+					if (data.status == "success") {
+						return callback();
+					} else {
+						return callback(data.msg);
+					}
+				} else {
+					return callback('注册失败')
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback('网络出错，请稍候再试');
+			}
+		})
 	};
 
-	/**
-	 * 获取当前状态
-	 **/
-	owner.getState = function() {
-		var stateText = localStorage.getItem('$state') || "{}";
-		return JSON.parse(stateText);
-	};
-
-	/**
-	 * 设置当前状态
-	 **/
-	owner.setState = function(state) {
-		state = state || {};
-		localStorage.setItem('$state', JSON.stringify(state));
-		//var settings = owner.getSettings();
-		//settings.gestures = '';
-		//owner.setSettings(settings);
-	};
-
-	var checkEmail = function(email) {
-		email = email || '';
-		return (email.length > 3 && email.indexOf('@') > -1);
-	};
-	
 	//手机号验证
-	var checkPhone = function(phone){
-		var regchek=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/g;
+	var checkPhone = function(phone) {
+		var regchek = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/g;
 		return phone.match(regchek);
 	}
 
 	/**
-	 * 找回密码
+	 * 找回密码--获取用户手机号
 	 **/
-	owner.forgetPassword = function(email, callback) {
-		callback = callback || $.noop;
-		if (!checkEmail(email)) {
-			return callback('邮箱地址不合法');
-		}
-		return callback(null, '新的随机密码已经发送到您的邮箱，请查收邮件。');
+	owner.getPhone = function(username, callback) {
+		mui.ajax('http:yangyj.com', {
+			data: {
+				username: username
+			},
+			dataType: 'text',
+			type: 'get',
+			timeout: 3000, //超时时间设置为3秒；	              
+			success: function(data) {
+				if (data) {
+					data = JSON.parse(data);
+					if (data) { //此套框架请求失败会默认返回html文档数据，所以可能不会触发error
+						if (data.status == "success") {
+							return callback(true, data.data);
+						} else {
+							return callback(false, data.msg);
+						}
+					} else {
+						return callback(false, '操作失败');
+					}
+				} else {
+					return callback(false, '操作失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback(true, '网络出错，请稍候再试');
+			}
+		})
 	};
 
+	/**
+	 * 找回密码--发送验证码
+	 **/
+	owner.sendMessageForReg = function(phone, callback) {
+		mui.ajax('http://tangguoyule.cn/tgadmin/duanxin/index', {
+			data: {
+				user_tel: phone
+			},
+			dataType: 'text',
+			type: 'post',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data) {
+					data = typeof data == "object" ? data : JSON.parse(data);
+					if (data) { //此套框架请求失败会默认返回html文档数据，所以可能不会触发error
+						if (data.success) {
+							return callback();
+						} else {
+							return callback('发送验证码失败');
+						}
+					} else {
+						return callback('发送验证码失败');
+					}
+				} else {
+					return callback('发送验证码失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback(false, '网络出错，请稍候再试');
+			}
+		})
+	};
+
+	//验证用户验证码
+	owner.checkMessageReg = function(forgetInfo, callback) {
+		forgetInfo = forgetInfo || {};
+		if (!forgetInfo.regCode) {
+			return callback('请输入验证码');
+		}
+		mui.ajax('http://tangguoyule.cn/tgadmin/duanxin/check_code', {
+			data: {
+				mobile: forgetInfo.phone,
+				mobile_code: forgetInfo.regCode
+			},
+			dataType: 'text',
+			type: 'get',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data) {
+					data = typeof data == "object" ? data : JSON.parse(data);
+					if (data) { //此套框架请求失败会默认返回html文档数据，所以可能不会触发error
+						if (data.code == 200) {
+							return callback();
+						} else {
+							return callback('验证码错误');
+						}
+					} else {
+						return callback('验证码验证失败');
+					}
+				} else {
+					return callback('验证码验证失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback(false, '网络出错，请稍候再试');
+			}
+		})
+	}
+
+	//修改密码
+	owner.changePassword = function(forgetInfo, callback) {
+		mui.ajax('http://yangyj.com', {
+			data: {
+				username: forgetInfo.forgetAccount,
+				newPassword: forgetInfo.newPassword
+			},
+			dataType: 'text',
+			type: 'post',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data && JSON.parse(data)) {
+					data = JSON.parse(data);
+					if (data.status == "success") {
+						return callback();
+					} else {
+						return callback(data.msg);
+					}
+				} else {
+					return callback('保存失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback(false, '网络出错，请稍候再试');
+			}
+		})
+	}
 	/**
 	 * 获取应用本地配置
 	 **/
@@ -113,87 +247,142 @@
 	 * 设置应用本地配置
 	 **/
 	owner.getSettings = function() {
-			var settingsText = localStorage.getItem('$settings') || "{}";
-			return JSON.parse(settingsText);
-		}
-		/**
-		 * 获取本地是否安装客户端
-		 **/
-	owner.isInstalled = function(id) {
-		if (id === 'qihoo' && mui.os.plus) {
-			return true;
-		}
-		if (mui.os.android) {
-			var main = plus.android.runtimeMainActivity();
-			var packageManager = main.getPackageManager();
-			var PackageManager = plus.android.importClass(packageManager)
-			var packageName = {
-				"qq": "com.tencent.mobileqq",
-				"weixin": "com.tencent.mm",
-				"sinaweibo": "com.sina.weibo"
-			}
-			try {
-				return packageManager.getPackageInfo(packageName[id], PackageManager.GET_ACTIVITIES);
-			} catch (e) {}
-		} else {
-			switch (id) {
-				case "qq":
-					var TencentOAuth = plus.ios.import("TencentOAuth");
-					return TencentOAuth.iphoneQQInstalled();
-				case "weixin":
-					var WXApi = plus.ios.import("WXApi");
-					return WXApi.isWXAppInstalled()
-				case "sinaweibo":
-					var SinaAPI = plus.ios.import("WeiboSDK");
-					return SinaAPI.isWeiboAppInstalled()
-				default:
-					break;
-			}
-		}
+		var settingsText = localStorage.getItem('$settings') || "{}";
+		return JSON.parse(settingsText);
 	}
-	
-	/* 获取当前登录用户的所有可用信息 */
-	owner.getCurrentUser=function(state){
-		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
-		var currenUser=null;
-		var authed = users.some(function(user) {
-			if(state.account == user.account){
-				currenUser=user;
-				return
-			}
-		});
-		return currenUser;
-	}
-	
-	/* 急救档案或紧急联系人保存 */
-	owner.userInfoAdd = function(addInfo, callback) {
+
+	/* 紧急联系人保存 */
+	owner.contactAdd = function(contactInfo, callback) {
 		callback = callback || $.noop;
-		addInfo = addInfo || {};
-		var userAddKey=null;
-		if('aidFile' in addInfo){	//急救档案的保存
-			if(!addInfo.aidFile.name||!addInfo.aidFile.address||!addInfo.aidFile.case){
-				return callback('请填写以上信息');
-			}
-			userAddKey='aidFile'
-		}else if('contact' in addInfo){
-			//紧急联系人
-			if(!addInfo.contact.contactName||!addInfo.contact.contactPhone){
-				return callback('请填写以上信息');
-			}else if(!checkPhone(addInfo.contact.contactPhone)){
-				return callback('请确认联系电话输入正确');
-			}
-			userAddKey='contact';
+		contactInfo = contactInfo || {};
+		contactInfo.uid = contactInfo.uid || 'anonymous';
+		//紧急联系人
+		if (!contactInfo.contactName || !contactInfo.contactPhone) {
+			return callback('请填写以上信息');
+		} else if (!checkPhone(contactInfo.contactPhone)) {
+			return callback('请确认联系电话输入正确');
 		}
-		
-		var state=owner.getState();
-		var users = JSON.parse(localStorage.getItem('$Users') || '[]');
-		users.some(function(user){
-			if(state.account == user.account){
-				user[userAddKey]=addInfo[userAddKey];
+		mui.ajax('http://192.168.40.133:8088/yc/contact/edit', {
+			data: {
+				contactName: contactInfo.contactName,
+				contactPhone: contactInfo.contactPhone,
+				uid: contactInfo.uid
+			},
+			dataType: 'text',
+			type: 'post',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data && JSON.parse(data)) {
+					data = JSON.parse(data);
+					if (data.status == "success") {
+						return callback();
+					} else {
+						return callback(data.msg);
+					}
+				} else {
+					return callback('保存失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback('网络出错，请稍候再试');
 			}
 		})
-		localStorage.setItem('$Users', JSON.stringify(users));
-		return callback();
+	};
+	/* 紧急联系人获取 */
+	owner.contactGet = function(user, callback) {
+		callback = callback || $.noop;
+		user = user || 'anonymous';
+		mui.ajax('http://192.168.40.133:8088/yc/contact/query', {
+			data: {
+				uid: user
+			},
+			dataType: 'text',
+			type: 'get',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data && JSON.parse(data)) {
+					data = JSON.parse(data);
+					if (data.status == "success") {
+						return callback(true, data.data);
+					} else {
+						return callback(false, data.msg);
+					}
+				} else {
+					return callback(false, '获取数据失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback(false, '网络出错，请稍候再试');
+			}
+		})
+	};
+
+	/* 急救档案保存 */
+	owner.aidAdd = function(aidFileInfo, callback) {
+		callback = callback || $.noop;
+		aidFileInfo = aidFileInfo || {};
+		aidFileInfo.uid = aidFileInfo.uid || 'anonymous';
+		if (!aidFileInfo.name || !aidFileInfo.address || !aidFileInfo.case) {
+			return callback('请填写以上信息');
+		}
+		mui.ajax('http://192.168.40.133:8088/yc/document/edit', {
+			data: {
+				realName: aidFileInfo.name,
+				address: aidFileInfo.address,
+				history: aidFileInfo.case,
+				uid: aidFileInfo.uid
+			},
+			dataType: 'text',
+			type: 'post',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data && JSON.parse(data)) {
+					data = JSON.parse(data);
+					if (data.status == "success") {
+						return callback();
+					} else {
+						return callback(data.msg);
+					}
+				} else {
+					return callback('保存失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback('网络出错，请稍候再试');
+			}
+		})
+	};
+	/* 急救档案获取 */
+	owner.aidGet = function(user, callback) {
+		callback = callback || $.noop;
+		user = user || 'anonymous';
+		mui.ajax('http://192.168.40.133:8088/yc/document/query', {
+			data: {
+				uid: user
+			},
+			dataType: 'text',
+			type: 'get',
+			timeout: 10000, //超时时间设置为10秒；	              
+			success: function(data) {
+				if (data && JSON.parse(data)) {
+					data = JSON.parse(data);
+					if (data.status == "success") {
+						return callback(true, data.data);
+					} else {
+						return callback(false, data.msg);
+					}
+				} else {
+					return callback(false, '获取数据失败');
+				}
+
+			},
+			error: function(xhr, type, errorThrown) {
+				return callback(false, '网络出错，请稍候再试');
+			}
+		})
 	};
 
 }(mui, window.app = {}));

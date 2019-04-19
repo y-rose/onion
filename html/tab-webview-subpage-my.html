@@ -185,7 +185,9 @@
 			}
 			
 			/*问题反馈在setting页面单独的css==end*/
-			
+			.hasPhone{
+				display: none;
+			}
 			
 		</style>
 	</head>
@@ -274,13 +276,13 @@
 							</a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>帐号<input id="regAccount" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入5位及以上帐号"></a>
+								<a>帐号<input id="regAccount" class="mui-pull-right rightInput" maxlength="10" placeholder="请输入帐号"></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>密码<input id="regPassword" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入6位及以上密码" type="password"></a>
+								<a>密码<input id="regPassword" class="mui-pull-right rightInput" maxlength="10" placeholder="请输入3位及以上密码" type="password"></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>确认密码<input id="regConfirmPassword" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入确认密码" type="password"></a>
+								<a>确认密码<input id="regConfirmPassword" class="mui-pull-right rightInput" maxlength="10" placeholder="请输入确认密码" type="password"></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
@@ -311,15 +313,14 @@
 					<div class="mui-scroll">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
-								<a>帐号<input id="loginAccount" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入5位及以上帐户名"></a>
+								<a>帐号<input id="loginAccount" class="mui-pull-right rightInput" maxlength="10" placeholder="请输入帐号"></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>密码<input id="loginPassword" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入6位及以上密码" type="password"></a>
+								<a>密码<input id="loginPassword" class="mui-pull-right rightInput" maxlength="10" placeholder="请输入密码" type="password"></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
-								<!-- <a>自动登录<input  id="loginPhone" class="mui-pull-right rightInput" maxlength="11" placeholder="请输入11位手机号" type="number"></a> -->
 								自动登录
 								<div id="autoLogin" class="mui-switch">
 									<div class="mui-switch-handle"></div>
@@ -355,12 +356,21 @@
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll">
-						<ul class="mui-table-view">
+						<ul class="mui-table-view noPhone">
 							<li class="mui-table-view-cell">
 								<a>帐号<input id="forgetPasswordAccount" class="mui-pull-right rightInput" maxlength="16" placeholder="请输入您的注册帐号"></a>
 							</li>
+						</ul>
+						
+						<ul class="mui-table-view hasPhone">
+							<button type="button" class="mui-btn mui-btn-primary" style="height: 40px;" id="forgetSendMessge" data-loading-text = "已发送至您的手机" data-loading-icon-position="left">获取短信验证码</button>
 							<li class="mui-table-view-cell">
-								<a>手机号<input  id="forgetPasswordPhone" class="mui-pull-right rightInput" maxlength="11" placeholder="请输入您的注册手机号" type="number"></a>
+								<a>验证码<input  id="forgetRegCode" class="mui-pull-right rightInput" maxlength="8" placeholder="请输入短信验证码" type="number"></a>
+							</li>
+						</ul>
+						<ul class="mui-table-view hasPhone">
+							<li class="mui-table-view-cell">
+								<a>新密码<input  id="forgetNewPassword" class="mui-pull-right rightInput" maxlength="11" placeholder="请输入您的新密码" type="number"></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
@@ -497,6 +507,14 @@
 											</p>
 										</div>
 									</li>
+									<li class="mui-table-view-cell mui-collapse">
+										<a class="mui-navigate-right" href="#">关于分享位置信息</a>
+										<div class="mui-collapse-content">
+											<p>
+												该功能仅适用于Android平台，IOS平台设备不予支持。请Andriod设备开启短信、定位等权限。
+											</p>
+										</div>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -586,18 +604,136 @@
 		//忘记密码初始化
 		document.getElementById('forgetShowBtn').addEventListener('tap',function(){
 			document.getElementById('forgetPasswordAccount').value="";
-			document.getElementById('forgetPasswordAccount').value="";
+			document.getElementById('forgetRegCode').value="";
+			document.getElementById('forgetNewPassword').value="";
 		})
+		
+		//忘记密码发送验证码
+		var messageTimer=null;
+		mui(document.body).on('tap', '#forgetSendMessge', function(e) {
+            mui(this).button('loading');
+			var phone=app.getSettings().forgetPhone;
+			if(!phone){
+				plus.nativeUI.toast('未检测到手机号！')
+				return
+			}
+			app.sendMessageForReg(phone,function(err){
+				if(err){
+					clearTimeout(messageTimer);
+					mui(this).button('reset');
+					plus.nativeUI.toast(err);
+					return
+				}
+				plus.nativeUI.toast('已发送验证码，两分钟内有效！')
+			})
+            messgeTimer=setTimeout(function() {
+                mui(this).button('reset');
+            }.bind(this), 6000);
+			
+        });
 		
 		//忘记密码
 		document.getElementById('forgetPasswordBtn').addEventListener('tap',function(){
-			var forgetAccount=document.getElementById('forgetPasswordAccount').value;
-			var forgetPhone=document.getElementById('forgetPasswordAccount').value;
-			var users = localStorage.getItem('$Users');
-			var lostUser=null;
+			var step=mui('.noPhone')[0].style.display=="none"?true:false;
+			//匹配手机号阶段
+			if(!step){
+				var forgetAccount=document.getElementById('forgetPasswordAccount').value;
+				if(!forgetAccount){
+					plus.nativeUI.toast('请将以上信息填写完整')
+					return
+				}else{
+					app.getPhone(forgetAccount,function(status,message){
+						if(status){
+							mui('.noPhone').each(function(index,element){
+								element.style.display="none";
+							})
+							mui('.hasPhone').each(function(index,element){
+								element.style.display="block";
+							})
+							var settings=app.getSettings();
+							settings.forgetPhone=message.phone;
+							app.setSettings(settings);
+						}else{
+							plus.nativeUI.toast(message)
+						}
+					})
+				}
+			}else{	//	找回密码阶段
+				var regCodeState=mui('#forgetSendMessge').button().state;
+				var forgetInfo={
+					forgetAccount:document.getElementById('forgetPasswordAccount').value,
+					regCode:document.getElementById('forgetRegCode').value,
+					newPassword:document.getElementById('forgetNewPassword').value,
+					phone:app.getSettings().forgetPhone
+				}
+				if(!forgetAccount){
+					plus.nativeUI.toast('无可查询用户，请重新填入')
+					mui('.noPhone').each(function(index,element){
+						element.style.display="none";
+					})
+					mui('.hasPhone').each(function(index,element){
+						element.style.display="block";
+					})
+					return
+				}else if(!phone){
+					plus.nativeUI.toast('未查询到该用户的注册手机号，请重新查询')
+					mui('.noPhone').each(function(index,element){
+						element.style.display="none";
+					})
+					mui('.hasPhone').each(function(index,element){
+						element.style.display="block";
+					})
+					return
+				}else if(!forgetInfo.regCode||!forgetInfo.newPassword){
+					plus.nativeUI.toast('请将以上信息填写完整')
+					return
+				}else if(regCodeState=='reset'){
+					plus.nativeUI.toast('验证码已过期或未发送，请重新获取！')
+					return
+				}else if(forgetInfo.newPassword.length<3){
+					plus.nativeUI.toast('密码最短需要 3 个字符！')
+					return
+				}
+				app.checkMessageReg(forgetInfo,function(err){
+					if(err){
+						plus.nativeUI.toast(err);
+						return
+					}
+					app.changePassword(forgetInfo,function(err){
+						if(err){
+							plus.nativeUI.toast(err)
+							return
+						}
+						plus.nativeUI.toast('重置密码成功')
+						mui.back();
+						mui('.noPhone').each(function(index,element){
+							element.style.display="none";
+						})
+						mui('.hasPhone').each(function(index,element){
+							element.style.display="block";
+						})
+						var settings=app.getSettings();
+						settings.forgetPhone=null;
+						app.setSettings(settings);
+					})
+				})
+			}
 			
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 			if(users){
-				if(forgetAccount&&forgetPhone){
+				if(forgetAccount&&regCode&&newPassword){
+					mui(this).button('loading');
 					users=JSON.parse(users);
 					for(var user in users){
 						if(user.account==forgetAccount){
@@ -612,7 +748,7 @@
 					//确认了用户丢失的信息user,等待老吴的短信接口。
 					mui.back();
 				}else{
-					plus.nativeUI.toast('请输入您的注册帐户和手机号');
+					plus.nativeUI.toast('请输入以上信息');
 				}
 			}else{
 				plus.nativeUI.toast('未检索到设备上存在注册信息，请确认已注册');
@@ -634,7 +770,7 @@
 				var isActive=document.getElementById('autoLogin').classList.contains('mui-active');
 				var settings=app.getSettings();
 				settings.autoLogin=isActive;
-				settings.logged=true;
+				settings.username=loginInfo.account;
 				app.setSettings(settings);
 				IsLoginThen();
 				mui.back();
@@ -661,44 +797,44 @@
 		})
 		
 		//急救档案初始化
-		document.getElementById('aidFileShowBtn').addEventListener("tap",function(){
-			var state=app.getState();
-			var currentUser=app.getCurrentUser(state);
-			if(currentUser){
-				if(currentUser.aidFile){
-					document.getElementById('aidName').value=currentUser.aidFile.name;
-					document.getElementById('aidAddress').value=currentUser.aidFile.address;
-					document.getElementById('aidCase').value=currentUser.aidFile.case;
-					if(mui.os.plus){
-						plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
-							var s = entry.fullPath + "?version=" + new Date().getTime();;
-							document.getElementById("head-img1").src = s;	//急救档案
-						}, function(e) {
-							document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-						})
-					}else{
-						document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-					}
-				}else{
-					document.getElementById('aidName').value="";
-					document.getElementById('aidAddress').value="";
-					document.getElementById('aidCase').value="";
+		document.getElementById('aidFileShowBtn').addEventListener("tap",function(){			
+			//图片的初始化
+			if(mui.os.plus){
+				plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
+					var s = entry.fullPath + "?version=" + new Date().getTime();;
+					document.getElementById("head-img1").src = s;	//急救档案
+				}, function(e) {
 					document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-				}
+				})
+			}else{
+				document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
 			}
+			var user=app.getSettings().currentUser;
+			app.aidGet(user, function(status,message) {
+				if (status) {
+					document.getElementById('aidName').value=message.realName;
+					document.getElementById('aidAddress').value=message.address;
+					document.getElementById('aidCase').value=message.case;
+				}
+				plus.nativeUI.toast(message);
+				document.getElementById('aidName').value="";
+				document.getElementById('aidAddress').value="";
+				document.getElementById('aidCase').value="";
+			})
+			
+			
 			
 		})
 		
 		//急救档案的保存
 		document.getElementById('aidFileBtn').addEventListener('tap',function(){
 			var aidFileInfo = {
-				aidFile:{
-					name:document.getElementById('aidName').value,
-					address:document.getElementById('aidAddress').value,
-					case:document.getElementById('aidCase').value
-				}
+				name:document.getElementById('aidName').value,
+				address:document.getElementById('aidAddress').value,
+				case:document.getElementById('aidCase').value,
+				uid:app.getSettings().currentUser
 			};
-			app.userInfoAdd(aidFileInfo, function(err) {
+			app.aidAdd(aidFileInfo, function(err) {
 				if (err) {
 					plus.nativeUI.toast(err);
 					return;
@@ -710,29 +846,26 @@
 		
 		//紧急联系人的初始化
 		document.getElementById('contactShowBtn').addEventListener('tap',function(){
-			var state=app.getState();
-			var currentUser=app.getCurrentUser(state);
-			if(currentUser){
-				//初始化紧急联系人
-				if(currentUser.contact){
-					document.getElementById('contactName').value=currentUser.contact.contactName;
-					document.getElementById('contactPhone').value=currentUser.contact.contactPhone;
-				}else{
-					document.getElementById('contactName').value="";
-					document.getElementById('contactPhone').value="";
+			var user=app.getSettings().currentUser;
+			app.contactGet(user, function(status,message) {
+				if (status) {
+					document.getElementById('contactName').value=message.contactName;
+					document.getElementById('contactPhone').value=message.contactPhone;
 				}
-			}	
+				plus.nativeUI.toast(message);
+				document.getElementById('contactName').value="";
+				document.getElementById('contactPhone').value="";
+			})
 		})
 		
 		//紧急联系人的保存
 		document.getElementById('contactBtn').addEventListener('tap',function(){
 			var contactInfo = {
-				contact:{
-					contactName:document.getElementById('contactName').value,
-					contactPhone:document.getElementById('contactPhone').value
-				}
+				contactName:document.getElementById('contactName').value,
+				contactPhone:document.getElementById('contactPhone').value,
+				uid:app.getSettings().currentUser
 			};
-			app.userInfoAdd(contactInfo, function(err) {
+			app.contactAdd(contactInfo, function(err) {
 				if (err) {
 					plus.nativeUI.toast(err);
 					return;
@@ -752,9 +885,9 @@
 			var settingBtn=document.getElementById('settingBtn');
 			var state=app.getState();
 			if(settings.autoLogin||settings.logged){	//有自动登录的用户或已经登录
-				if(state){	
+				if(settings.currentUser){	
 					//已经登录
-					userName.innerText="帐号："+state.account;
+					userName.innerText="帐号："+(settings.username||'已登录');
 					settingBtn.innerText="退出登录";
 					settingBtn.href="#";
 					for(var i=0;i<showIfLoggedIn.length;i++){
@@ -771,6 +904,7 @@
 			for(var i=0;i<showIfLoggedIn.length;i++){
 				showIfLoggedIn[i].style.display='none';
 			}
+			app.setSettings();
 		}
 		
 		

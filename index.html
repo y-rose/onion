@@ -46,6 +46,7 @@
 	</div>
 	<script src="js/mui.min.js"></script>
 	<script src="js/util.js"></script>
+	<script src="js/app.js"></script>
 	<script>
 		(function(){
 			mui.init({
@@ -99,141 +100,17 @@
 				var self=plus.webview.currentWebview(),
 					leftPos=Math.ceil((window.innerWidth-60)/2);	//设置凸起大图标为水平居中
 					
-					/**
-					 * drawNativeIcon绘制带边框的半圆，
-					 * 实现原理：
-					 * id为bg的tag创建带边框的圆
-					 * id为bg2的tag创建白色矩形遮住圆下半部分，只显示凸起带边框部分
-					 * id为iconBg的红色背景图
-					 * id为icon的字体图标
-					 * 注意创建先后顺序
-					 */
-					
-					var drawNativeIcon = util.drawNative('icon', {
-						bottom: '5px',
-						left: leftPos + 'px',
-						width: '60px',
-						height: '60px'
-					}, [{
-						tag: 'rect',
-						id: 'bg',
-						position: {
-							top: '1px',
-							left: '0px',
-							width: '100%',
-							height: '100%'
-						},
-						rectStyles: {
-							color: '#fff',
-							radius: '50%',
-							borderColor: '#ccc',
-							borderWidth: '1px'
-						}
-					}, {
-						tag: 'rect',
-						id: 'bg2',
-						position: {
-							bottom: '-0.5px',
-							left: '0px',
-							width: '100%',
-							height: '45px'
-						},
-						rectStyles: {
-							color: '#fff'
-						}
-					}, {
-						tag: 'rect',
-						id: 'iconBg',
-						position: {
-							top: '5px',
-							left: '5px',
-							width: '50px',
-							height: '50px'
-						},
-						rectStyles: {
-							color: '#d74b28',
-							radius: '50%'
-						}
-					}, {
-						tag: 'font',
-						id: 'icon',
-						text: '\ue201', //此为字体图标Unicode码'\e600'转换为'\ue600'
-						position: {
-							top: '0px',
-							left: '5px',
-							width: '50px',
-							height: '100%'
-						},
-						textStyles: {
-							fontSrc: '_www/fonts/mui.ttf',
-							align: 'center',
-							color: '#fff',
-							size: '30px'
-						}
-					}]);
-					// append 到父webview中
-					self.append(drawNativeIcon);
-					
-					//自定义监听图标点击事件
-					var active_color = '#fff';
-					drawNativeIcon.addEventListener('click', function(e) {
-						map.getUserLocation(function(state,point){
-							if(state==0){
-								plus.maps.Map.reverseGeocode(point,{},function(event){
-									mui.confirm('获取您的位置信息是: \n'+event.address+'\n是否需要将您的位置信息发送给您的紧急联系人？','人人社区',['取消','确认'],function (e) {
-									
-									},'div')
-								},function(e){
-									H5Geolocation();
-								})
-							}else{
-								H5Geolocation();
-							}
-						})
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						// mui.alert('你点击了图标，你在此可以打开摄像头或者新窗口等自定义点击事件。', '悬浮球点击事件');
-						// 重绘字体颜色
-						if(active_color == '#fff') {
-							drawNativeIcon.drawText('\ue201', {}, {
-								fontSrc: '_www/fonts/mui.ttf',
-								align: 'center',
-								color: '#000',
-								size: '30px'
-							}, 'icon');
-							active_color = '#000';
-						} else {
-							drawNativeIcon.drawText('\ue201', {}, {
-								fontSrc: '_www/fonts/mui.ttf',
-								align: 'center',
-								color: '#fff',
-								size: '30px'
-							}, 'icon');
-							active_color = '#fff';
-						}
-					
-					});
-					// 中间凸起图标绘制及监听点击完毕
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-/* 				var drawNativeIcon = util.drawNative('icon', {
+				/**
+				 * drawNativeIcon绘制带边框的半圆，
+				 * 实现原理：
+				 * id为bg的tag创建带边框的圆
+				 * id为bg2的tag创建白色矩形遮住圆下半部分，只显示凸起带边框部分
+				 * id为iconBg的红色背景图
+				 * id为icon的字体图标
+				 * 注意创建先后顺序
+				 */
+				
+				var drawNativeIcon = util.drawNative('icon', {
 					bottom: '5px',
 					left: leftPos + 'px',
 					width: '60px',
@@ -281,7 +158,7 @@
 				}, {
 					tag: 'font',
 					id: 'icon',
-					text: '\ue201', //此为字体图标Unicode码'\e600'转换为'\ue600'
+					text: '\ue6c9', //此为字体图标Unicode码'\e600'转换为'\ue600'
 					position: {
 						top: '0px',
 						left: '5px',
@@ -289,7 +166,7 @@
 						height: '100%'
 					},
 					textStyles: {
-						fontSrc: '_www/fonts/map.hide();',
+						fontSrc: '_www/fonts/iconfont.ttf',
 						align: 'center',
 						color: '#fff',
 						size: '30px'
@@ -299,14 +176,37 @@
 				self.append(drawNativeIcon);
 				
 				//自定义监听图标点击事件
-				var active_color='#fff';
-				drawNativeIcon.addEventListener('click',function(e){
+				var active_color = '#fff';
+				drawNativeIcon.addEventListener('click', function(e) {
 					map.getUserLocation(function(state,point){
 						if(state==0){
 							plus.maps.Map.reverseGeocode(point,{},function(event){
-								mui.confirm('获取您的位置信息是: \n'+event.address+'\n是否需要将您的位置信息发送给您的紧急联系人？','人人社区',['取消','确认'],function (e) {
-								
-								},'div')
+								if ( plus.os.name == "Android" ){
+									mui.confirm('获取您的位置信息是: \n'+event.address+'\n是否将位置信息发送给您的紧急联系人','人人社区',['是','否'],function(e){
+										if(e.index==0){
+											//获取紧急联系人信息
+											var uid=app.getSettings().currentUser;
+											if(!uid){
+												plus.nativeUI.toast('未检测到已登录用户，请先行登录');
+												return
+											}
+											app.contactGet(uid,function(status,message){
+												if(!status){
+													plus.nativeUI.toast('未查询到您的紧急联系人');
+													return
+												}
+												var msg=plus.messaging.createMessage(plus.messaging.TYPE_SMS);
+												msg.to=[message.contactPhone];
+												msg.body='我通过《人人社区》向您发来位置信息：\n'+event.address+'\n您的朋友'+aidMessage.realName+'也许需要您的帮助，请及时联系。'
+												msg.client=true;
+												plus.messaging.sendMessage(msg);
+												
+											})
+										}
+									})
+								}else{
+									mui.alert('获取您的位置信息是: \n'+event.address,'人人社区');
+								}
 							},function(e){
 								H5Geolocation();
 							})
@@ -314,26 +214,27 @@
 							H5Geolocation();
 						}
 					})
-					//重绘字体颜色
-					if(active_color=='#fff'){
-						drawNativeIcon.drawText('\ue600',{},{
-							fontSrc:'_www/fonts/iconfont.ttf',
-							align:'center',
-							color:'#000',
-							size:'30px'
-						},'icon');
-						active_color='#000';
-					}else{
-						drawNativeIcon.drawText('\ue600',{},{
-							fontSrc:'_www/fonts/iconfont.ttf',
-							align:'center',
-							color:'#fff',
-							size:'30px'
-						},'icon');
-						active_color='#fff';
+					// 重绘字体颜色
+					if(active_color == '#fff') {
+						drawNativeIcon.drawText('\ue6c9', {}, {
+							fontSrc: '_www/fonts/iconfont.ttf',
+							align: 'center',
+							color: '#000',
+							size: '30px'
+						}, 'icon');
+						active_color = '#000';
+					} else {
+						drawNativeIcon.drawText('\ue6c9', {}, {
+							fontSrc: '_www/fonts/iconfont.ttf',
+							align: 'center',
+							color: '#fff',
+							size: '30px'
+						}, 'icon');
+						active_color = '#fff';
 					}
+				
 				});
-				//中间凸起图标绘制及监听点击完毕 */
+				// 中间凸起图标绘制及监听点击完毕
 				
 				//创建webview窗口,并初始化
 				var aniShow={};
@@ -438,15 +339,41 @@
 			//当无法通过map控件对象获取定位时,尝试通过H5的geolocation获取
 			function H5Geolocation(){
 				plus.geolocation.getCurrentPosition(function(location){
-					map.hide();
-					mui.confirm('获取您的位置信息是'+location.address+'\n是否需要将您的位置信息发送给您的紧急联系人？','人人社区',['无需发送','确定发送'],function (e) {
-						map.show();
-					},'div')
+					if ( plus.os.name == "Android" ){
+						mui.confirm('获取您的位置信息是: \n'+location.address+'\n是否将位置信息发送给您的紧急联系人','人人社区',['是','否'],function(e){
+							if(e.index==0){
+								//获取紧急联系人信息
+								var uid=app.getSettings().currentUser;
+								if(!uid){
+									plus.nativeUI.toast('未检测到已登录用户，请先行登录');
+									return
+								}
+								app.contactGet(uid,function(status,message){
+									if(!status){
+										plus.nativeUI.toast('未查询到您的紧急联系人');
+										return
+									}
+									app.aidGet(uid,function(status,aidMessage){
+										if(!status){
+											plus.nativeUI.toast('未查询到您的急救档案里的真实姓名');
+											return
+										}else{
+											var msg=plus.messaging.createMessage(plus.messaging.TYPE_SMS);
+											msg.to=[message.contactPhone];
+											msg.body=message.contactName+'您好，你的朋友'+aidMessage.realName+'通过人人社区向您发来位置信息：\n'+location.address+'\n您的朋友'+aidMessage.realName+'也许需要您的帮助，请及时联系。'
+											msg.client=true;
+											plus.messaging.sendMessage(msg);
+										}
+									})
+									
+								})
+							}
+						})
+					}else{
+						mui.alert('获取您的位置信息是: \n'+location.address,'人人社区');
+					}
 				},function(error){
-					map.hide();
-					mui.alert('无法获取您的位置，请检查网络状况及是否开启了手机定位，并稍候再试','人人社区','确定',function (e) {
-						map.show();
-					},'div')
+					mui.alert('无法获取您的位置，请检查网络状况及是否开启了手机定位，并稍候再试','人人社区');
 				})
 			}
 			
