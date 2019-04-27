@@ -363,7 +363,7 @@
 						</ul>
 						
 						<ul class="mui-table-view hasPhone">
-							<button type="button" class="mui-btn mui-btn-primary" style="height: 40px;" id="forgetSendMessge" data-loading-text = "已发送至您的手机" data-loading-icon-position="left">获取短信验证码</button>
+							<button type="button" class="mui-btn mui-btn-primary" style="height: 40px;" id="forgetSendMessge" data-loading-text = "正发送至您的手机" data-loading-icon-position="left">获取短信验证码</button>
 							<li class="mui-table-view-cell">
 								<a>验证码<input  id="forgetRegCode" class="mui-pull-right rightInput" maxlength="8" placeholder="请输入短信验证码" type="number"></a>
 							</li>
@@ -603,6 +603,12 @@
 		
 		//忘记密码初始化
 		document.getElementById('forgetShowBtn').addEventListener('tap',function(){
+			mui('.noPhone').each(function(index,element){
+				element.style.display="block";
+			})
+			mui('.hasPhone').each(function(index,element){
+				element.style.display="none";
+			})
 			document.getElementById('forgetPasswordAccount').value="";
 			document.getElementById('forgetRegCode').value="";
 			document.getElementById('forgetNewPassword').value="";
@@ -615,6 +621,7 @@
 			var phone=app.getSettings().forgetPhone;
 			if(!phone){
 				plus.nativeUI.toast('未检测到手机号！')
+            mui(this).button('reset');
 				return
 			}
 			app.sendMessageForReg(phone,function(err){
@@ -626,9 +633,9 @@
 				}
 				plus.nativeUI.toast('已发送验证码，两分钟内有效！')
 			})
-            messgeTimer=setTimeout(function() {
+            messageTimer=setTimeout(function() {
                 mui(this).button('reset');
-            }.bind(this), 6000);
+            }.bind(this), 60000);
 			
         });
 		
@@ -718,41 +725,6 @@
 					})
 				})
 			}
-			
-			
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-			if(users){
-				if(forgetAccount&&regCode&&newPassword){
-					mui(this).button('loading');
-					users=JSON.parse(users);
-					for(var user in users){
-						if(user.account==forgetAccount){
-							if(user.phone==forgetPhone){
-								lostUser=user;
-								break
-							}else{
-								plus.nativeUI.toast('手机号与帐号不匹配，请确认手机号');
-							}
-						}
-					}
-					//确认了用户丢失的信息user,等待老吴的短信接口。
-					mui.back();
-				}else{
-					plus.nativeUI.toast('请输入以上信息');
-				}
-			}else{
-				plus.nativeUI.toast('未检索到设备上存在注册信息，请确认已注册');
-			}
 		})
 		
 		//登录
@@ -790,7 +762,6 @@
 					return
 				}else{
 					app.setSettings();	//自动登录和已登录标示
-					app.setState();		//删除登录状态state
 					IsLoginThen()		//初始化个人中心
 				}
 			},'div')
@@ -849,7 +820,7 @@
 			var user=app.getSettings().currentUser;
 			app.contactGet(user, function(status,message) {
 				if (status) {
-					document.getElementById('contactName').value=message.contactName;
+					document.getElementById('contactName').value=message.contact;
 					document.getElementById('contactPhone').value=message.contactPhone;
 				}
 				plus.nativeUI.toast(message);
@@ -883,7 +854,6 @@
 			var userName=document.getElementById('user-name');
 			var showIfLoggedIn=document.getElementsByClassName('isLoggedIn');
 			var settingBtn=document.getElementById('settingBtn');
-			var state=app.getState();
 			if(settings.autoLogin||settings.logged){	//有自动登录的用户或已经登录
 				if(settings.currentUser){	
 					//已经登录
@@ -1037,32 +1007,21 @@
 		};
 
 		function defaultImg() {
-			var state=app.getState();
-			var currentUser=app.getCurrentUser(state);
+			//急救档案的图片初始化
+			var currentUser=app.getSettings().currentUser;
 			if(currentUser){
-				if(currentUser.aidFile){
-					if(mui.os.plus){
-						plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
-							var s = entry.fullPath + "?version=" + new Date().getTime();;
-							document.getElementById("head-img1").src = s;	//急救档案
-						}, function(e) {
-							document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-						})
-					}else{
+				if(mui.os.plus){
+					plus.io.resolveLocalFileSystemURL("_doc/aidHeadPic.jpg", function(entry) {
+						var s = entry.fullPath + "?version=" + new Date().getTime();;
+						document.getElementById("head-img1").src = s;	//急救档案
+					}, function(e) {
 						document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
-					}
+					})
 				}else{
 					document.getElementById("head-img1").src = '../img/portrail_man_1.jpg';
 				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
+			//个人中心的用户头像初始化
 			if(mui.os.plus){
 				plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
 					var s = entry.fullPath + "?version=" + new Date().getTime();

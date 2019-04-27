@@ -20,8 +20,8 @@
 		}
 		mui.ajax('http://192.168.40.133:8088/yc/user/login', {
 			data: {
-				username: regInfo.account,
-				password: regInfo.password
+				username: loginInfo.account,
+				password: loginInfo.password
 			},
 			dataType: 'text',
 			type: 'post',
@@ -106,7 +106,7 @@
 	 * 找回密码--获取用户手机号
 	 **/
 	owner.getPhone = function(username, callback) {
-		mui.ajax('http:yangyj.com', {
+		mui.ajax('http://192.168.40.133:8088/yc/user/phone', {
 			data: {
 				username: username
 			},
@@ -131,7 +131,7 @@
 
 			},
 			error: function(xhr, type, errorThrown) {
-				return callback(true, '网络出错，请稍候再试');
+				return callback(false, '网络出错，请稍候再试');
 			}
 		})
 	};
@@ -165,7 +165,7 @@
 
 			},
 			error: function(xhr, type, errorThrown) {
-				return callback(false, '网络出错，请稍候再试');
+				return callback('网络出错，请稍候再试');
 			}
 		})
 	};
@@ -186,15 +186,10 @@
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
 				if (data) {
-					data = typeof data == "object" ? data : JSON.parse(data);
-					if (data) { //此套框架请求失败会默认返回html文档数据，所以可能不会触发error
-						if (data.code == 200) {
-							return callback();
-						} else {
-							return callback('验证码错误');
-						}
+					if (data == 200) {
+						return callback();
 					} else {
-						return callback('验证码验证失败');
+						return callback('验证码错误');
 					}
 				} else {
 					return callback('验证码验证失败');
@@ -209,7 +204,7 @@
 
 	//修改密码
 	owner.changePassword = function(forgetInfo, callback) {
-		mui.ajax('http://yangyj.com', {
+		mui.ajax('http://192.168.40.133:8088/yc/user/update/password', {
 			data: {
 				username: forgetInfo.forgetAccount,
 				newPassword: forgetInfo.newPassword
@@ -264,7 +259,7 @@
 		}
 		mui.ajax('http://192.168.40.133:8088/yc/contact/edit', {
 			data: {
-				contactName: contactInfo.contactName,
+				contact: contactInfo.contactName,
 				contactPhone: contactInfo.contactPhone,
 				uid: contactInfo.uid
 			},
