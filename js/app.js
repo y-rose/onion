@@ -149,7 +149,7 @@
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
 				if (data) {
-					data = typeof data == "object" ? data : JSON.parse(data);
+					data = typeof JSON.parse(data) == "object" ? JSON.parse(data) : JSON.parse(JSON.parse(data));
 					if (data) { //此套框架请求失败会默认返回html文档数据，所以可能不会触发error
 						if (data.success) {
 							return callback();
@@ -186,7 +186,7 @@
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
 				if (data) {
-					if (data == 200) {
+					if (data.indexOf(200)>-1) {
 						return callback();
 					} else {
 						return callback('验证码错误');
@@ -197,7 +197,7 @@
 
 			},
 			error: function(xhr, type, errorThrown) {
-				return callback(false, '网络出错，请稍候再试');
+				return callback('网络出错，请稍候再试');
 			}
 		})
 	}
@@ -226,7 +226,7 @@
 
 			},
 			error: function(xhr, type, errorThrown) {
-				return callback(false, '网络出错，请稍候再试');
+				return callback('网络出错，请稍候再试');
 			}
 		})
 	}
