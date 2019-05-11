@@ -1,7 +1,7 @@
 {
     "@platforms" : [ "android", "iPhone", "iPad" ],
-    "id" : "H595630DB", /*应用的标识*/
-    "name" : "graduation", /*应用名称，程序桌面图标名称*/
+    "id" : "H190505", /*应用的标识*/
+    "name" : "onion", /*应用名称，程序桌面图标名称*/
     "version" : {
         "name" : "1.0", /*应用版本名称*/
         "code" : ""
@@ -320,7 +320,7 @@
                 "maps" : {
                     "baidu" : {
                         "appkey_ios" : "TjbKAhb3URAydy1EMQTLuXkC02bG1nsj",
-                        "appkey_android" : "YYui9rTgxuW0f2Oju2gxhHlQ1dazP0vP",
+                        "appkey_android" : "Gl841zZNiy7WW4KLqumuFoHodZGsvhVO",
                         "description" : "百度地图"
                     }
                 },

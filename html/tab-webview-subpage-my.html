@@ -673,7 +673,7 @@
 					newPassword:document.getElementById('forgetNewPassword').value,
 					phone:app.getSettings().forgetPhone
 				}
-				if(!forgetAccount){
+				if(!forgetInfo.forgetAccount){
 					plus.nativeUI.toast('无可查询用户，请重新填入')
 					mui('.noPhone').each(function(index,element){
 						element.style.display="none";
@@ -682,7 +682,7 @@
 						element.style.display="block";
 					})
 					return
-				}else if(!phone){
+				}else if(!forgetInfo.phone){
 					plus.nativeUI.toast('未查询到该用户的注册手机号，请重新查询')
 					mui('.noPhone').each(function(index,element){
 						element.style.display="none";
@@ -785,7 +785,8 @@
 				if (status) {
 					document.getElementById('aidName').value=message.realName;
 					document.getElementById('aidAddress').value=message.address;
-					document.getElementById('aidCase').value=message.case;
+					document.getElementById('aidCase').value=message.history;
+					return
 				}
 				plus.nativeUI.toast(message);
 				document.getElementById('aidName').value="";
@@ -822,6 +823,7 @@
 				if (status) {
 					document.getElementById('contactName').value=message.contact;
 					document.getElementById('contactPhone').value=message.contactPhone;
+					return
 				}
 				plus.nativeUI.toast(message);
 				document.getElementById('contactName').value="";

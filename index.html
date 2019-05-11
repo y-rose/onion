@@ -11,7 +11,7 @@
     	
    		document.addEventListener('plusready', function(){
    			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
-   			
+   			plus.screen.lockOrientation('portrait-primary');
    		});
    		
     </script>
@@ -66,16 +66,10 @@
 				//仅支持竖屏显示
 				plus.screen.lockOrientation('portrait-primary');
 			    //读取本地存储,检查是否为首次启动
-				var showGuide=plus.storage.getItem('lauchFlag');
-				if(showGuide){
-					//有值,说明已经显示过了,无需再显示
-					//关闭splash页面
-					plus.navigator.closeSplashscreen();
-					plus.navigator.setFullscreen(false);
-					//预加载
-					preLoad();
-				}else{
-					//显示启动导航栏
+				/* var showGuide=plus.storage.getItem('lauchFlag'); */
+				em=document.getElementById("map");
+				plus.geolocation.getCurrentPosition(function(p){
+					mapLoad(p.coords.latitude,p.coords.longitude);
 					mui.openWindow({
 						id:'guide',
 						url:'html/guide.html',
@@ -94,7 +88,29 @@
 						//预加载
 						preLoad();
 					},200);
-				}
+				},function(e){
+					mui.alert('地图定位失败，将加载默认地图位置');
+					mapLoad(22.682318,114.068162);
+					mui.openWindow({
+						id:'guide',
+						url:'html/guide.html',
+						styles:{
+							popGesture:'none'
+						},
+						show:{
+							aniShow:'none'
+						},
+						waiting:{
+							autoShow:false
+						}
+					});
+					//延迟的关系,优先打开启动导航页面,避免资源争夺
+					setTimeout(function(){
+						//预加载
+						preLoad();
+					},200);
+				})
+
 				
 				//
 				var self=plus.webview.currentWebview(),
@@ -197,7 +213,7 @@
 												}
 												var msg=plus.messaging.createMessage(plus.messaging.TYPE_SMS);
 												msg.to=[message.contactPhone];
-												msg.body='我通过《人人社区》向您发来位置信息：\n'+event.address+'\n您的朋友'+aidMessage.realName+'也许需要您的帮助，请及时联系。'
+												msg.body='我通过《人人社区》向您发来位置信息：\n'+event.address+'\n您的这位朋友也许需要您的帮助，请及时联系---人人社区。'
 												msg.client=true;
 												plus.messaging.sendMessage(msg);
 												
@@ -275,9 +291,6 @@
 					//更新当前活跃的页面
 					activePage=targetPage;
 				});
-				
-				em=document.getElementById("map");
-				window.plus&&mapLoad();
 			})
 			
 			//初始化,并预加载
@@ -296,19 +309,11 @@
 			
 			//加载地图
 			function mapLoad(latitude,longitude){
-				//H5 plus事件处理
 				if(!em||ws){return};
-				var latitude=116.3975,
-					longitude=39.9074;	//	默认天安门经纬度
-				if(currentGeolocation){
-					latitude=currentGeolocation.coords.latitude;
-					longitude=currentGeolocation.coords.longitude;
-				}
-				
 				//获取窗口对象
 				ws=plus.webview.currentWebview();
 				wo=ws.opener();
-				pcenter=new plus.maps.Point(latitude,longitude);
+				pcenter=new plus.maps.Point(longitude,latitude);
 				setTimeout(function(){
 					map=new plus.maps.Map('map');
 					map.centerAndZoom(pcenter,13);
@@ -319,7 +324,6 @@
 				},300);
 				ws.show("pop-in");
 			}
-			
 			function creatMarker(latitude,longitude){
 				var marker=new plus.maps.Marker(new plus.maps.Point(latitude,longitude));
 				marker.setIcon("/img/mapMarker.png");
@@ -353,18 +357,11 @@
 										plus.nativeUI.toast('未查询到您的紧急联系人');
 										return
 									}
-									app.aidGet(uid,function(status,aidMessage){
-										if(!status){
-											plus.nativeUI.toast('未查询到您的急救档案里的真实姓名');
-											return
-										}else{
-											var msg=plus.messaging.createMessage(plus.messaging.TYPE_SMS);
-											msg.to=[message.contactPhone];
-											msg.body=message.contactName+'您好，你的朋友'+aidMessage.realName+'通过人人社区向您发来位置信息：\n'+location.address+'\n您的朋友'+aidMessage.realName+'也许需要您的帮助，请及时联系。'
-											msg.client=true;
-											plus.messaging.sendMessage(msg);
-										}
-									})
+									var msg=plus.messaging.createMessage(plus.messaging.TYPE_SMS);
+									msg.to=[message.contactPhone];
+									msg.body='我通过《人人社区》向您发来位置信息：\n'+location.address+'\n您的这位朋友也许需要您的帮助，请及时联系---人人社区。'
+									msg.client=true;
+									plus.messaging.sendMessage(msg);
 									
 								})
 							}

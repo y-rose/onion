@@ -18,17 +18,15 @@
 		if (loginInfo.password.length < 3) {
 			return callback('密码最短为 3 个字符');
 		}
-		mui.ajax('http://192.168.40.133:8088/yc/user/login', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/user/login', {
 			data: {
-				username: loginInfo.account,
+				userName: loginInfo.account,
 				password: loginInfo.password
 			},
-			dataType: 'text',
 			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
 				if (data) {
-					data = JSON.parse(data);
 					if (data.status == "success") {
 						//存储当前用户和已登录标示
 						var settings = owner.getSettings();
@@ -68,18 +66,16 @@
 		if (!checkPhone(regInfo.phone)) {
 			return callback('手机号不合法');
 		}
-		mui.ajax('http://192.168.40.133:8088/yc/user/register', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/user/register', {
 			data: {
-				username: regInfo.account,
+				userName: regInfo.account,
 				password: regInfo.password,
 				phone: regInfo.phone
 			},
-			dataType: 'text',
 			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；              
 			success: function(data) {
 				if (data) {
-					data = JSON.parse(data);
 					if (data.status == "success") {
 						return callback();
 					} else {
@@ -106,16 +102,14 @@
 	 * 找回密码--获取用户手机号
 	 **/
 	owner.getPhone = function(username, callback) {
-		mui.ajax('http://192.168.40.133:8088/yc/user/phone', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/user/phone', {
 			data: {
-				username: username
+				userName: username
 			},
-			dataType: 'text',
-			type: 'get',
+			type: 'post',
 			timeout: 3000, //超时时间设置为3秒；	              
 			success: function(data) {
 				if (data) {
-					data = JSON.parse(data);
 					if (data) { //此套框架请求失败会默认返回html文档数据，所以可能不会触发error
 						if (data.status == "success") {
 							return callback(true, data.data);
@@ -144,7 +138,6 @@
 			data: {
 				user_tel: phone
 			},
-			dataType: 'text',
 			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
@@ -181,7 +174,6 @@
 				mobile: forgetInfo.phone,
 				mobile_code: forgetInfo.regCode
 			},
-			dataType: 'text',
 			type: 'get',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
@@ -204,17 +196,15 @@
 
 	//修改密码
 	owner.changePassword = function(forgetInfo, callback) {
-		mui.ajax('http://192.168.40.133:8088/yc/user/update/password', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/user/update/password', {
 			data: {
-				username: forgetInfo.forgetAccount,
-				newPassword: forgetInfo.newPassword
+				userName: forgetInfo.forgetAccount,
+				password: forgetInfo.newPassword
 			},
-			dataType: 'text',
 			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
-				if (data && JSON.parse(data)) {
-					data = JSON.parse(data);
+				if (data) {
 					if (data.status == "success") {
 						return callback();
 					} else {
@@ -257,18 +247,16 @@
 		} else if (!checkPhone(contactInfo.contactPhone)) {
 			return callback('请确认联系电话输入正确');
 		}
-		mui.ajax('http://192.168.40.133:8088/yc/contact/edit', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/contact/edit', {
 			data: {
 				contact: contactInfo.contactName,
 				contactPhone: contactInfo.contactPhone,
 				uid: contactInfo.uid
 			},
-			dataType: 'text',
 			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
-				if (data && JSON.parse(data)) {
-					data = JSON.parse(data);
+				if (data) {
 					if (data.status == "success") {
 						return callback();
 					} else {
@@ -288,16 +276,14 @@
 	owner.contactGet = function(user, callback) {
 		callback = callback || $.noop;
 		user = user || 'anonymous';
-		mui.ajax('http://192.168.40.133:8088/yc/contact/query', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/contact/query', {
 			data: {
 				uid: user
 			},
-			dataType: 'text',
-			type: 'get',
+			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
-				if (data && JSON.parse(data)) {
-					data = JSON.parse(data);
+				if (data) {
 					if (data.status == "success") {
 						return callback(true, data.data);
 					} else {
@@ -322,19 +308,17 @@
 		if (!aidFileInfo.name || !aidFileInfo.address || !aidFileInfo.case) {
 			return callback('请填写以上信息');
 		}
-		mui.ajax('http://192.168.40.133:8088/yc/document/edit', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/document/edit', {
 			data: {
 				realName: aidFileInfo.name,
 				address: aidFileInfo.address,
 				history: aidFileInfo.case,
 				uid: aidFileInfo.uid
 			},
-			dataType: 'text',
 			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
-				if (data && JSON.parse(data)) {
-					data = JSON.parse(data);
+				if (data) {
 					if (data.status == "success") {
 						return callback();
 					} else {
@@ -354,16 +338,14 @@
 	owner.aidGet = function(user, callback) {
 		callback = callback || $.noop;
 		user = user || 'anonymous';
-		mui.ajax('http://192.168.40.133:8088/yc/document/query', {
+		mui.ajax('http://47.100.199.31:8080/yangcong-1.0-SNAPSHOT/yc/document/query', {
 			data: {
 				uid: user
 			},
-			dataType: 'text',
-			type: 'get',
+			type: 'post',
 			timeout: 10000, //超时时间设置为10秒；	              
 			success: function(data) {
-				if (data && JSON.parse(data)) {
-					data = JSON.parse(data);
+				if (data) {
 					if (data.status == "success") {
 						return callback(true, data.data);
 					} else {
